@@ -4,6 +4,7 @@
 	import { Toast } from "$lib/app/utils/swal";
 	import RecordAddModal from "$lib/components/grouped/users/admins/dean/RecordAddModal.svelte";
 	import RecordsList from "$lib/components/grouped/users/admins/dean/RecordsList.svelte";
+	import RecordView from "$lib/components/grouped/users/admins/dean/RecordView.svelte";
 	import ConfirmPopup from "$lib/components/single/global/ConfirmPopup.svelte";
 	import { onMount, untrack } from "svelte";
 
@@ -12,6 +13,8 @@
 	let confirmArcresPopupOpen = $state(false);
 	let confirmArcresPopupRecord = $state(null);
 	let query = $state("");
+	let openedRecord = $state(null);
+	let recordOpen = $state(false);
     let recordsInfo = $state({
         data: [],
 		total: 0,
@@ -159,6 +162,15 @@
 			await searchRecords();
 		}
 	}
+
+	function onRecordOpen(record) {
+		recordOpen = true;
+		openedRecord = record;
+	}
+
+	function onRecordClose() {
+		recordOpen = false;
+	}
 	
     onMount(async () => await CourseService.allFromSchool(
 		async (data) => {
@@ -171,7 +183,7 @@
 		},
 		async (data) => {
 			await Toast.fire({
-				title: data?.message ?? "Unable to get courses.",
+				title: data?.message ?? "Failed to get courses.",
 				icon: "error"
 			});
 		}
@@ -183,22 +195,30 @@
 	})
 </script>
 
-{#if coursesReady}
-	<RecordsList
-		bind:query={query}
-		bind:courseId={courseId}
-		{courses}
-		{onAdd}
-		{onQueryClear}
-		{archived}
-		{recordsInfo}
-		{onSearch}
-		onOpen={() => {}}
-		{onArchive}
-		{onRestore}
-		{onPrev}
-		{onNext}
+{#if recordOpen}
+	<RecordView
+		{openedRecord}
+		{onRecordClose}
 	/>
+{:else}
+	{#if coursesReady}
+		<RecordsList
+			bind:query={query}
+			bind:courseId={courseId}
+			bind:recordOpen={recordOpen}
+			{courses}
+			{onAdd}
+			{onQueryClear}
+			{archived}
+			{recordsInfo}
+			{onSearch}
+			{onRecordOpen}
+			{onArchive}
+			{onRestore}
+			{onPrev}
+			{onNext}
+		/>
+	{/if}
 {/if}
 {#if addModalOpen}
 	<RecordAddModal

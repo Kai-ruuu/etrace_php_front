@@ -43,7 +43,7 @@ export class PstaffService {
         }
     }
 
-    static async updateProfile(pstaffProfile) {
+    static async updateProfile(pstaffProfile, onSuccess, onFail) {
         try {
             const res = await fetch(apiPath("/api/users/profiles/pstaff"), {
                 method: "PATCH",

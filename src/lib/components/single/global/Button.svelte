@@ -8,13 +8,15 @@
         size = "m",
         class: className = "",
         children,
-        onclick
+        onclick,
+        ...props
     } = $props();
 </script>
 
 {#if size === "m"}
     <button
         {onclick}
+        {...props}
         class={twMerge("px-6 py-3 bg-red-800 text-white rounded-lg cursor-pointer flex items-center justify-center", className)}>
         <div class="flex items-center gap-x-2">
             {#if Icon && iconPos === "l"}
@@ -31,6 +33,7 @@
 {:else if size == "s"}
     <button
         {onclick}
+        {...props}
         class={twMerge("px-3 py-1 bg-red-800 text-white text-sm rounded-lg cursor-pointer flex items-center justify-center", className)}
     >
         <div class="flex items-center gap-x-2">

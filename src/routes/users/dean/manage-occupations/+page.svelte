@@ -29,7 +29,6 @@
 			aligned,
 			onSuccess: async (data, status) => {
                 occupationsInfo = data;
-				console.log(data);
             },
 			onFail: async (data, status) => {
 				await Toast.fire({
@@ -139,7 +138,7 @@
 		},
 		async (data) => {
 			await Toast.fire({
-				title: data?.message ?? "Unable to get courses.",
+				title: data?.message ?? "Failed to get courses.",
 				icon: "error"
 			});
 		}

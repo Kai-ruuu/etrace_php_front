@@ -19,7 +19,7 @@
                     label="Prev"
                     size="s"
                     onclick={onPrev}
-                    class="bg-blue-600"
+                    class="bg-blue-500"
                 />
             {/if}
             {#if info.has_next}
@@ -29,7 +29,7 @@
                     label="Next"
                     size="s"
                     onclick={onNext}
-                    class="bg-blue-600"
+                    class="bg-blue-500"
                 />
             {/if}
         </div>

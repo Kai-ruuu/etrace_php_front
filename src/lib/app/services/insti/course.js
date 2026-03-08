@@ -18,12 +18,20 @@ export class CourseService {
 
     static async all(onSuccess, onFail) {
         try {
-            const res = await fetch(apiPath("/api/courses"), {
-                credentials: "include",
-                headers: { "Content-Type": "application/json" }
-            });
+            const res = await fetch(apiPath("/api/courses"), { credentials: "include" });
             const data = await res.json();
 
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    
+    static async allActive(onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath("/api/courses/active"), { credentials: "include" });
+            const data = await res.json();
+    
             await onCall(res, data, onSuccess, onFail);
         } catch (err) {
             console.error(err);

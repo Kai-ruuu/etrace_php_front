@@ -7,7 +7,8 @@
         title = "",
         BtnIcon = null,
         btnLabel = "",
-        onBtnClick = null
+        onBtnClick = null,
+        children
     } = $props();
 </script>
 
@@ -21,6 +22,9 @@
         </button>
         <h1 class="text-lg">{title}</h1>
     </div>
+    {#if children}
+        {@render children()}
+    {/if}
     {#if btnLabel && onBtnClick}
         <Button Icon={BtnIcon} label={btnLabel} onclick={onBtnClick} size="s" class="bg-green-500"/>
     {/if}

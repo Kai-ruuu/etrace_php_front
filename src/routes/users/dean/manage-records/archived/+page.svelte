@@ -140,7 +140,7 @@
 		},
 		async (data) => {
 			await Toast.fire({
-				title: data?.message ?? "Unable to get courses.",
+				title: data?.message ?? "Failed to get courses.",
 				icon: "error"
 			});
 		}

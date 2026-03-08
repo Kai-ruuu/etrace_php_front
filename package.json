@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"host": "vite dev --host",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -27,7 +28,9 @@
 	},
 	"dependencies": {
 		"lucide-svelte": "^0.575.0",
+		"papaparse": "^5.5.3",
 		"sweetalert2": "^11.26.20",
-		"tailwind-merge": "^3.5.0"
+		"tailwind-merge": "^3.5.0",
+		"uuid": "^13.0.0"
 	}
 }

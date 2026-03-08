@@ -22,6 +22,16 @@ export class RecordService {
         }
     }
 
+    static async open(record, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/records/${record.id}/open`), { credentials: "include" });
+            const data = await res.json();
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     static async search(
         q = "",
         {
