@@ -1,15 +1,16 @@
 <script>
 	import { RotateCw, X } from "lucide-svelte";
-	import HeadBar from "../users/admins/HeadBar.svelte";
+	import HeadBar from "../HeadBar.svelte";
 	import Button from "$lib/components/single/global/Button.svelte";
 	import ConfirmPopup from "$lib/components/single/global/ConfirmPopup.svelte";
 	import { CompanyService } from "$lib/app/services/users/company";
 	import { Toast } from "$lib/app/utils/swal";
+	import { AlumniService } from "$lib/app/services/users/alumni";
 
     let {
-        rejections, // has .company
+        rejections,
         onExitRejections,
-        onAfterCompanyPend
+        onAfterAlumniPend
     } = $props();
 
     let confirmPendOpen = $state(false);
@@ -24,14 +25,14 @@
     }
 
     async function onPendConfirm() {
-        await CompanyService.pend(
-            rejections.company,
+        await AlumniService.pend(
+            rejections.alumni,
             async (data, status) => {
                 confirmPendOpen = false;
                 
-                onAfterCompanyPend();
+                await onAfterAlumniPend();
                 await Toast.fire({
-                    title: data?.message ?? "Company has been enlisted as pending.",
+                    title: data?.message ?? "Alumni has been enlisted as pending.",
                     icon: "success"
                 });
             },
@@ -39,7 +40,7 @@
                 confirmPendOpen = false;
                 
                 await Toast.fire({
-                    title: data?.message ?? "Unable to pend company.",
+                    title: data?.message ?? "Unable to pend alumni.",
                     icon: "error"
                 })
             },
@@ -49,7 +50,7 @@
 
 <div class="flex flex-col items-stretch overflow-hidden h-full">
     <HeadBar
-        title={`Rejection Appeals - ${rejections.company.profile.name}`}
+        title={`Rejection Appeals - ${rejections.alumni.profile.first_name}${rejections.alumni.profile.name_extension && (" " + rejections.alumni.profile.name_extension)} ${rejections.alumni.profile.middle_name && (rejections.alumni.profile.middle_name + " ")}${rejections.alumni.profile.last_name}`}
         BtnIcon={X}
         btnLabel={"Exit"}
         onBtnClick={onExitRejections}
@@ -71,10 +72,10 @@
                                 year: "numeric",
                                 month: "short",
                                 day: "numeric"
-                            })} - {rejections.company.profile.name}</p>
+                            })} - {rejections.alumni.profile.name}</p>
                             {#if index === 0}
                                 <Button
-                                    title={`Mark ${rejections.company.profile.name} as pending?`}
+                                    title={`Mark ${rejections.alumni.profile.name} as pending?`}
                                     Icon={RotateCw}
                                     label="Mark as Pending"
                                     size="s"
@@ -86,7 +87,7 @@
                         <p>{rejection.appeal.message}</p>
                     {:else}
                         <hr class="border-t border-gray-200 mt-6">
-                        <p class="text-sm text-gray-500 mt-3 mb-0">No appeal from {rejections.company.profile.name} yet.</p>
+                        <p class="text-sm text-gray-500 mt-3 mb-0">No appeal from {rejections.alumni.profile.name} yet.</p>
                     {/if}
                 </div>
             {/each}
@@ -95,7 +96,7 @@
 </div>
 {#if confirmPendOpen}
     <ConfirmPopup
-        confirmText={`Enlist ${rejections.company.profile.name} into pending companies?`}
+        confirmText={`Enlist ${rejections.alumni.profile.first_name}${rejections.alumni.profile.name_extension && (" " + rejections.alumni.profile.name_extension)} ${rejections.alumni.profile.middle_name && (rejections.alumni.profile.middle_name + " ")}${rejections.alumni.profile.last_name} into pending alumni?`}
         onConfirm={onPendConfirm}
         onCancel={onPendExit}
     />

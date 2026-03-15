@@ -24,13 +24,8 @@
 </script>
 
 <div class="flex flex-col items-stretch overflow-hidden h-full">
-    <HeadBar
-        title="Manage Graduate Records"
-        BtnIcon={archived ? null : Plus}
-        btnLabel={archived ? null : "Add"}
-        onBtnClick={archived ? null : onAdd}
-    />
-	<div class="max-h-[calc(100%-64px)] overflow-auto">
+    <HeadBar title="Manage Graduate Records"/>
+	<div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6 min-w-max">
             <div class="border border-gray-200 rounded-lg bg-white space-y-2 overflow-clip my-6">
                 <div class="sticky top-0 left-0 px-6 bg-white pt-6 flex items-center gap-x-2">
@@ -53,6 +48,14 @@
                         onClear={onQueryClear}
                         class="grow"
                     />
+                    {#if !archived}
+                        <Button
+                            Icon={Plus}
+                            label="Add"
+                            onclick={onAdd}
+                            class="bg-green-500"
+                        />
+                    {/if}
                 </div>
                 {#if recordsInfo.data.length > 0}
                     <div class="px-6">
@@ -60,6 +63,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-left py-2">Filename</th>
+                                    <th class="text-left pl-4 py-2">Graduation Year</th>
                                     <th class="text-left pl-4 py-2">From</th>
                                     <th class="pl-4 text-left py-2">Actions</th>
                                 </tr>
@@ -68,6 +72,7 @@
                                 {#each recordsInfo.data as record}
                                     <tr>
                                         <td class="py-2 text-nowrap">{record.filename}</td>
+                                        <td class="py-2 pl-4 text-nowrap">{record.graduation_year}</td>
                                         <td class="py-2 pl-4 text-nowrap">{record.uploader.first_name} {record.uploader.middle_name ? record.uploader.middle_name + " " : ""}{record.uploader.last_name}</td>
                                         <td class="pl-4 flex items-center gap-x-2">
                                             {#if !archived}

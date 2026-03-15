@@ -55,6 +55,14 @@
     }
 
     async function onAppealSend(rejection_id) {
+        if (message.trim().length === 0) {
+            Toast.fire({
+                title: "Please write an appeal first.",
+                icon: "error"
+            });
+            return;
+        }
+        
         await CompanyService.writeRejectionAppeal(
             { message, rejection_id },
             async (data, status) => {
@@ -90,7 +98,7 @@
     <HeadBar
         title="Manage Verification"
     />
-    <div class="max-h-[calc(100%-64px)] overflow-auto">
+    <div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6">
             <div class="overflow-clip my-6">
                 <div class="flex items-center w-full border-b border-gray-200 bg-gray-50 rounded-tl-lg rounded-tr-lg">

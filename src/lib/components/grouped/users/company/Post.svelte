@@ -1,13 +1,27 @@
 <script>
 	import { API_BASE_URL } from "$lib/app/core/constants";
 	import { user } from "$lib/app/stores/user";
-	import { Book, Briefcase, Calendar1, Check, ChevronDown, ChevronRight, DollarSign, EllipsisVertical, File, MapPin, Monitor, Scroll, SunMoon, ThumbsUp, Users } from "lucide-svelte";
-	import { onMount } from "svelte";
+	import Button from "$lib/components/single/global/Button.svelte";
+	import { Book, Briefcase, Calendar1, Check, ChevronDown, ChevronRight, DollarSign, EllipsisVertical, File, MapPin, MinusCircle, Monitor, Scroll, Share, SunMoon, ThumbsUp, Trash, Users, X } from "lucide-svelte";
+	import SubmissionsListModal from "./SubmissionsListModal.svelte";
+	import { twMerge } from "tailwind-merge";
+	import ConfirmPopup from "$lib/components/single/global/ConfirmPopup.svelte";
+	import RepostModal from "./RepostModal.svelte";
 
-    let { post } = $props();
+    let {
+        post,
+        published,
+        onClose,
+        onDelete,
+        onRepost
+    } = $props();
     let collapsed = $state(false);
-
-    onMount(() => console.log(post));
+    let submissionsOpen = $state(false);
+    let moreOpen = $state(false);
+    let confirmCloseOpen = $state(false);
+    let confirmDeleteOpen = $state(false);
+    let repostModalOpen = $state(false);
+    let openUntil = $state(null);
 </script>
 
 <div class="px-6 py-4 rounded-lg border border-gray-200 mx-6 space-y-4">
@@ -26,16 +40,74 @@
                 })}</p>
             </div>
         </div>
-        <button
-            class="cursor-pointer"
-            onclick={() => collapsed = !collapsed}
-        >
-            {#if collapsed}
-                <ChevronDown class="min-w-4 max-w-4"/>
-            {:else}
-                <ChevronRight class="min-w-4 max-w-4"/>
-            {/if}
-        </button>
+        <div class="flex items-center gap-x-2">
+            <div class="relative flex items-center justify-center">
+                <button
+                    class="cursor-pointer"
+                    onclick={() => moreOpen = !moreOpen}
+                >
+                    <EllipsisVertical class="min-w-4 max-w-4"/>
+                </button>
+                {#if moreOpen}
+                    <div class="absolute top-0 left-0 -translate-x-[100%] border border-gray-200 rounded-lg bg-white">
+                        <button
+                            disabled={!published}
+                            title="Close job post"
+                            onclick={() => confirmCloseOpen = true}
+                            class={twMerge("text-nowrap flex items-center gap-x-2 pl-4 pr-5 py-2 cursor-pointer", !published && "text-gray-300")}
+                        >
+                            <MinusCircle class="min-w-4 max-w-4"/>
+                            <span>Close</span>
+                        </button>
+                        <hr class="border-t border-gray-200">
+                        <button
+                            disabled={published}
+                            title="Delete job post"
+                            onclick={() => confirmDeleteOpen = true}
+                            class={twMerge("text-nowrap flex items-center gap-x-2 pl-4 pr-5 py-2 cursor-pointer text-red-500", published && "text-red-300")}
+                        >
+                            <Trash class="min-w-4 max-w-4"/>
+                            <span>Delete</span>
+                        </button>
+                        <hr class="border-t border-gray-200">
+                        <button
+                            disabled={published}
+                            title="Repost job"
+                            onclick={() => {
+                                repostModalOpen = true;
+                                const now = new Date();
+                                now.setDate(now.getDate() + 30);
+                                const in30Days = now.toISOString().split('T')[0];
+                                openUntil = in30Days;
+                            }}
+                            class={twMerge("text-nowrap flex items-center gap-x-2 pl-4 pr-5 py-2 cursor-pointer", published && "text-gray-300")}
+                        >
+                            <Share class="min-w-4 max-w-4"/>
+                            <span>Repost</span>
+                        </button>
+                        <hr class="border-t border-gray-200">
+                        <button
+                            title="Cancel"
+                            onclick={() => moreOpen = false}
+                            class="text-nowrap flex items-center gap-x-2 pl-4 pr-5 py-2 cursor-pointer"
+                        >
+                            <X class="min-w-4 max-w-4"/>
+                            <span>Cancel</span>
+                        </button>
+                    </div>
+                {/if}
+            </div>
+            <button
+                class="cursor-pointer"
+                onclick={() => collapsed = !collapsed}
+            >
+                {#if collapsed}
+                    <ChevronDown class="min-w-4 max-w-4"/>
+                {:else}
+                    <ChevronRight class="min-w-4 max-w-4"/>
+                {/if}
+            </button>
+        </div>
     </div>
 
     <hr class="border-t border-gray-200">
@@ -118,16 +190,73 @@
             {/each}
         </div>
     {/if}
-
-    <hr class="border-t border-gray-200">
-    <div class="w-full flex justify-end gap-x-4">
-        <div class="flex items-center gap-x-2 border-r border-gray-300 pr-4">
-            <ThumbsUp class="min-w-4 max-w-4"/>
-            <span>700 Likes</span>
+    
+    {#if published}
+        <hr class="border-t border-gray-200">
+        <div class="w-full flex justify-end gap-x-4">
+            <button
+                onclick={() => {}}
+                class="flex items-center gap-x-2 border-r border-gray-300 pr-4 cursor-pointer"
+            >
+                <ThumbsUp class="min-w-4 max-w-4"/>
+                <span>{post.likes} {post.likes === 1 ? "Like" : "Likes"}</span>
+            </button>
+            <div class="flex items-center gap-x-2 border-r border-gray-300 pr-4">
+                <File class="min-w-4 max-w-4"/>
+                <span>{post.submissions} CV {post.submissions === 1 ? "Submission" : "Submissions"}</span>
+            </div>
+            <Button
+                Icon={File}
+                label="View CV Submissions"
+                onclick={() => submissionsOpen = true}
+                size="s"
+                class="bg-blue-500"
+            />
         </div>
-        <div class="flex items-center gap-x-2">
-            <File class="min-w-4 max-w-4"/>
-            <span>700 CV Submissions</span>
-        </div>
-    </div>
+    {/if}
 </div>
+
+{#if submissionsOpen}
+    <SubmissionsListModal
+        {post}
+        onExit={() => submissionsOpen = false}
+    />
+{/if}
+
+{#if confirmCloseOpen}
+    <ConfirmPopup
+        confirmText="Close post?"
+        onCancel={() => confirmCloseOpen = false}
+        onConfirm={async () => {
+            confirmCloseOpen = false;
+            await onClose(post.id);
+        }}
+    />
+{/if}
+
+{#if confirmDeleteOpen}
+    <ConfirmPopup
+        confirmText="Delete post?"
+        onCancel={() => confirmDeleteOpen = false}
+        onConfirm={async () => {
+            confirmDeleteOpen = false;
+            await onDelete(post.id);
+        }}
+    />
+{/if}
+
+{#if repostModalOpen}
+    <RepostModal
+        bind:openUntil={openUntil}
+        onCancel={() => {
+            moreOpen = false;
+            repostModalOpen = false;
+            openUntil = null;
+        }}
+        onConfirm={async () => {
+            moreOpen = false;
+            repostModalOpen = false;
+            await onRepost(post.id, openUntil);
+        }}
+    />
+{/if}

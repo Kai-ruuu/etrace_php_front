@@ -19,8 +19,6 @@
     const id = v4();
 
     async function onConfirmReupload() {
-        console.log(`key: ${key}\ndisplay: ${display}\nsource: ${source}`);
-        
         await CompanyService.reupload(
             { file, source, key, display },
             async (data, stat) => {

@@ -7,6 +7,7 @@ export class RecordService {
         // add proper validation later
         formData.append("course_id", record.course_id);
         formData.append("graduate_record", record.graduate_record);
+        formData.append("graduation_year", record.graduation_year);
         
         try {
             const res = await fetch(apiPath(("/api/records")), {
@@ -25,6 +26,16 @@ export class RecordService {
     static async open(record, onSuccess, onFail) {
         try {
             const res = await fetch(apiPath(`/api/records/${record.id}/open`), { credentials: "include" });
+            const data = await res.json();
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async findFromAlumni(alumni, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/records/from-alumni?course_id=${alumni.profile.course.id}&year_graduated=${alumni.profile.graduation_year}`), { credentials: "include" });
             const data = await res.json();
             await onCall(res, data, onSuccess, onFail);
         } catch (err) {

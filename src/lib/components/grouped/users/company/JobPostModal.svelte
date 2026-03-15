@@ -161,7 +161,6 @@
             async (data, stat) => {
                 courses = data;
                 coursesReady = true;
-                console.log(data);
             },
             async (data, stat) => {
                 await Toast.fire({

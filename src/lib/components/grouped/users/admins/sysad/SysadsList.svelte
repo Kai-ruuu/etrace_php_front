@@ -26,7 +26,7 @@
         btnLabel={enabled ? "Add" : null}
         onBtnClick={enabled ? onAdd : null}
     />
-	<div class="max-h-[calc(100%-64px)] overflow-auto">
+	<div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6 min-w-max">
             <div class="border border-gray-200 rounded-lg bg-white space-y-2 overflow-clip my-6">
                 <div class="sticky top-0 left-0 px-6 bg-white pt-6 flex items-center gap-x-2">

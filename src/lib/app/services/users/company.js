@@ -74,12 +74,25 @@ export class CompanyService {
         }
     }
 
+    static async pend(company, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/${company.profile.id}/pend`), {
+                method: "PATCH",
+                credentials: "include"
+            });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     static async verify(company, onSuccess, onFail) {
         try {
             const res = await fetch(apiPath(`/api/users/company/${company.profile.id}/verify`), {
                 method: "PATCH",
                 credentials: "include",
-                headers: { "Content-Type": "application/json" },
             });
             const data = await res.json();
 
@@ -297,7 +310,7 @@ export class CompanyService {
         }
     }
 
-    static async searchJobPostsAsCompany(
+    static async searchJobPosts(
         q = "",
         {
             onSuccess = null,
@@ -315,6 +328,89 @@ export class CompanyService {
                 apiPath(`/api/users/company/posts/search?q=${q}&page=${page}&per_page=${perPage}&published=${published}`), 
                 { credentials: "include" }
             );
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async getCvSubmissions(jobPost, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/posts/${jobPost.id}/cvs`), { credentials: "include" });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async getAlumniProfile(alumniUserId, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/${alumniUserId}/profile`), { credentials: "include" });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async reviewSubmission(submissionId, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/posts/submissions/${submissionId}/review`),
+                {
+                    method: "PATCH",
+                    credentials: "include"
+                }
+            );
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async closeJobPost(postId, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/posts/${postId}/close`),
+                {
+                    method: "PATCH",
+                    credentials: "include"
+                }
+            );
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async deleteJobPost(postId, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/posts/${postId}/delete`), {
+                method: "DELETE",
+                credentials: "include"
+            });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async repostJobPost(postId, open_until, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/posts/${postId}/repost`), {
+                method: "PATCH",
+                credentials: "include",
+                body: JSON.stringify({ open_until })
+            });
             const data = await res.json();
 
             await onCall(res, data, onSuccess, onFail);

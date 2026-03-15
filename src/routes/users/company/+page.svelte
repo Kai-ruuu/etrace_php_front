@@ -15,7 +15,7 @@
 	});
 
 	async function searchPosts() {
-		await CompanyService.searchJobPostsAsCompany(query, {
+		await CompanyService.searchJobPosts(query, {
 			page: postsInfo.page,
 			perPage: postsInfo.perPage,
 			published,
@@ -61,7 +61,7 @@
 	bind:query={query}
 	bind:published={published}
 	{onQueryClear}
-	{postsInfo}
+	bind:postsInfo={postsInfo}
 	{onSearch}
 	{onPrev}
 	{onNext}

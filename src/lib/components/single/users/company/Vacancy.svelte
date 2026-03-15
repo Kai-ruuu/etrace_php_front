@@ -160,8 +160,6 @@
     }
 
     async function onConfirmDelQualification() {
-        console.log([...qualifications.filter((q) => q !== confirmDelQuali)]);
-
         await CompanyService.editQualification(
             { qualifications: [...qualifications.filter((q) => q !== confirmDelQuali)], id: vacancy.id },
             async (data, stat) => {

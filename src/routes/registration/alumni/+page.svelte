@@ -1,12 +1,14 @@
 <script>
 	import { goto } from "$app/navigation";
 	import { CourseService } from "$lib/app/services/insti/course";
+	import { AlumniService } from "$lib/app/services/users/alumni";
 	import { PlatformService } from "$lib/app/services/users/platform";
 	import { Toast } from "$lib/app/utils/swal";
 	import BaseContainer from "$lib/components/single/global/BaseContainer.svelte";
 	import Button from "$lib/components/single/global/Button.svelte";
 	import EmailField from "$lib/components/single/global/EmailField.svelte";
 	import FileField from "$lib/components/single/global/FileField.svelte";
+	import NumberField from "$lib/components/single/global/NumberField.svelte";
 	import PasswordField from "$lib/components/single/global/PasswordField.svelte";
 	import TextField from "$lib/components/single/global/TextField.svelte";
 	import { Briefcase, Check, ChevronLeft, ChevronRight, Plus, Trash, X } from "lucide-svelte";
@@ -17,28 +19,10 @@
 	const maxCateg = 5;
 	const categs = [
 		"Personal Information",
-		// Last Name
-		// Middle Name (Optional)
-		// First Name
-		// Name Extension
-		// Birth Date
-		// Birth Place
-		// Gender
-		// Civil Status
 		"Contact Information",
-		// Phone Number
-		// Address
 		"Educational Information",
-		// Course Taken
-		// Student Number (Optional)
 		"Employment Information",
-		// Employment Status
-		// CV
 		"Account Information",
-		// Profile Picture
-		// Email
-		// Password
-		// Confirm-Password
 	];
 	const scrollCategs = [0, 3];
 	let alumni = $state({
@@ -55,9 +39,10 @@
 		socials: { value: [], error: "" },
 		course_id: { value: 0, error: "" },
 		student_number: { value: "", error: "" },
-		file_cv: { value: null, error: "" },
+		graduation_year: { value: (new Date()).getFullYear(), error: "" },
+		file_cv: { value: null, error: "" }, 
 		employment_status: { value: "Employed", error: "" },
-		occupations: { value: [], error: "" },
+		occupations: { value: [], error: "" }, 
 		file_profile_picture: { value: null, error: "" },
 		email: { value: "", error: "" },
 		password: { value: "", error: "" },
@@ -144,16 +129,27 @@
 		return noErrors;
 	}
 
-	function validateBirthDate() {
+	function validateDateRelated() {
 		const birthDate = new Date(alumni.birth_date.value);
 		const minDate = new Date(new Date().getFullYear() - 21, new Date().getMonth(), new Date().getDate());
+		let noErrors = true;
 
 		if (birthDate > minDate) {
-			alumni.birth_date.error = "Alumni must be at least 21 years old."
-			return false;
+			alumni.birth_date.error = "Alumni must be at least 21 years old.";
+			noErrors = false;
 		}
 
-		return true;
+		if (alumni.graduation_year.value > (new Date()).getFullYear()) {
+			alumni.graduation_year.error = "Gradutaion year is in the future.";
+			noErrors = false;
+		}
+
+		if (alumni.graduation_year.value < 2007) {
+			alumni.graduation_year.error = "Graduation year must be 2007 or later.";
+			noErrors = false;
+		}
+
+		return noErrors;
 	}
 
 	function toFormData() {
@@ -193,7 +189,7 @@
 		hasErrors = !validateTextRequires();
 		hasErrors = !validateFileRequires();
 		hasErrors = !validateListRequires();
-		hasErrors = !validateBirthDate();
+		hasErrors = !validateDateRelated();
 
 		if (hasErrors) {
 			await Toast.fire({
@@ -205,17 +201,27 @@
 
 		const newAlumni = toFormData();
 
-		for (let [key, value] of newAlumni.entries()) {
-			console.log(key, value);
-		}
+		await AlumniService.create(newAlumni,
+			async (data, status) => {
+				goto("/");
+				await Toast.fire({
+					title: data?.message ?? "You are now registered! Welcome to E-trace.",
+					icon: "success"
+				});
+			},
+			async (data, status) => {
+				await Toast.fire({
+					title: data?.message ?? "Failed to register, please double check your info.",
+					icon: "error"
+				});
+			},
+		);
 	}
 
 	onMount(async () => {
 		await PlatformService.all(
 			async (data, stat) => {
 				platforms = data;
-
-				console.log(data);
 			},
 			async (data, stat) => await Toast.fire({
 				title: data?.message ?? "Unable to get platforms.",
@@ -485,6 +491,25 @@
 					/>
 					{#if alumni.student_number.error}
 						<span class="text-red-500 text-sm">{alumni.student_number.error}</span>
+					{/if}
+				</div>
+				<div class="flex flex-col items-stretch">
+					<span class="mb-2 text-sm">Year Graduated</span>
+					<NumberField
+						onDebounce={(value) => {
+							if (parseInt(value) > new Date().getFullYear()) {
+								alumni.graduation_year.error = "Graduation year is in the future.";
+							} else if (parseInt(value) < 2007) {
+								alumni.graduation_year.error = "Graduation year must be 2007 or later.";
+							} else {
+								alumni.graduation_year.error = "";
+							}
+						}}
+						bind:value={alumni.graduation_year.value}
+						placeholder="Year graduated"
+					/>
+					{#if alumni.graduation_year.error}
+						<span class="text-red-500 text-sm">{alumni.graduation_year.error}</span>
 					{/if}
 				</div>
 			{:else if categ == 3}

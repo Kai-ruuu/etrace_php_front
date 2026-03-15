@@ -59,7 +59,7 @@
                 {/if}
                 <SidebarLink Icon={User} label="Deans" path="/users/sysad/manage-deans"/>
                 <SidebarLink Icon={User} label="PESO Staffs" path="/users/sysad/manage-peso-staffs"/>
-                <SidebarLink Icon={Building2} label="Company Approvals" path="/users/sysad/manage-company-approvals"/>
+                <SidebarLink Icon={Building2} label="Company Verification" path="/users/sysad/manage-company-approvals"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/sysad/account"/>
@@ -73,7 +73,7 @@
                 <SidebarLink Icon={BookCopy} label="Courses" path="/users/dean/manage-courses"/>
                 <SidebarLink Icon={Link} label="Occupations" path="/users/dean/manage-occupations"/>
                 <SidebarLink Icon={Scroll} label="Graduate Records" path="/users/dean/manage-records"/>
-                <SidebarLink Icon={User} label="Alumni Approvals" path="/users/dean/manage-alumni-approvals"/>
+                <SidebarLink Icon={User} label="Alumni Verification" path="/users/dean/alumni-verification"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/dean/account"/>
@@ -85,7 +85,7 @@
         {:else if $user.role === ROLE.pstaff.value}
             <SidebarLink Icon={LayoutDashboard} label="Dashboard" path="/users/pstaff"/>
             <SidebarLinkParent Icon={Wrench} label="Manage">
-                <SidebarLink Icon={User} label="Company Approvals" path="/users/pstaff/manage-company-approvals"/>
+                <SidebarLink Icon={User} label="Company Verification" path="/users/pstaff/manage-company-approvals"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/pstaff/account"/>
@@ -94,8 +94,7 @@
             <SidebarLink Icon={LayoutDashboard} label="Dashboard" path="/users/company"/>
             <SidebarLinkParent Icon={Wrench} label="Manage">
                 <SidebarLink Icon={User} label="Job Posts" path="/users/company/manage-job-posts"/>
-                <SidebarLink Icon={File} label="CV Submissions" path="/users/company/cv-submissions"/>
-                <SidebarLink Icon={BadgeCheck} label="Verification" path="/users/company/verification"/>
+                <SidebarLink Icon={BadgeCheck} label="Verification Center" path="/users/company/verification"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/company/account"/>
@@ -128,7 +127,7 @@
                 {/if}
                 <SidebarLink Icon={User} label="Deans" path="/users/sysad/manage-deans"/>
                 <SidebarLink Icon={User} label="PESO Staffs" path="/users/sysad/manage-peso-staffs"/>
-                <SidebarLink Icon={Building2} label="Company Approvals" path="/users/sysad/manage-company-approvals"/>
+                <SidebarLink Icon={Building2} label="Company Verification" path="/users/sysad/manage-company-approvals"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/sysad/account"/>
@@ -142,7 +141,7 @@
                 <SidebarLink Icon={BookCopy} label="Courses" path="/users/dean/manage-courses"/>
                 <SidebarLink Icon={Link} label="Occupations" path="/users/dean/manage-occupations"/>
                 <SidebarLink Icon={Scroll} label="Graduate Records" path="/users/dean/manage-records"/>
-                <SidebarLink Icon={User} label="Alumni Approvals" path="/users/dean/manage-alumni-approvals"/>
+                <SidebarLink Icon={User} label="Alumni Verification" path="/users/dean/alumni-verification"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/dean/account"/>
@@ -154,7 +153,7 @@
         {:else if $user.role === ROLE.pstaff.value}
             <SidebarLink Icon={LayoutDashboard} label="Dashboard" path="/users/pstaff"/>
             <SidebarLinkParent Icon={Wrench} label="Manage">
-                <SidebarLink Icon={User} label="Company Approvals" path="/users/pstaff/manage-company-approvals"/>
+                <SidebarLink Icon={User} label="Company Verification" path="/users/pstaff/manage-company-approvals"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/pstaff/account"/>
@@ -162,8 +161,7 @@
         {:else if $user.role === ROLE.company.value}
             <SidebarLinkParent Icon={Wrench} label="Manage">
                 <SidebarLink Icon={User} label="Job Posts" path="/users/company"/>
-                <SidebarLink Icon={File} label="CV Submissions" path="/users/company/cv-submissions"/>
-                <SidebarLink Icon={BadgeCheck} label="Verification" path="/users/company/verification"/>
+                <SidebarLink Icon={BadgeCheck} label="Verification Center" path="/users/company/verification"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/company/account"/>

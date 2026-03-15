@@ -136,14 +136,9 @@
 	async function onSubmit() {
 		let hasErrors = false;
 		
-		if (!validateTextRequires()) {
-			hasErrors = true;
-		}
+		hasErrors = !validateTextRequires();
+		hasErrors = !validateFileRequires();
 		
-		if (!validateFileRequires()) {
-			hasErrors = true;
-		}
-
 		if (company.vacancies.length === 0) {
 			hasNoVacancies = true;
 			hasErrors = true;

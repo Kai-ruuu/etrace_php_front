@@ -1,5 +1,6 @@
 <script>
 	import { CompanyService } from "$lib/app/services/users/company";
+	import { user } from "$lib/app/stores/user";
 	import { Toast } from "$lib/app/utils/swal";
 	import CompanyRejectionsView from "$lib/components/grouped/global/CompanyRejectionsView.svelte";
 	import CompanyRejectModal from "$lib/components/grouped/global/CompanyRejectModal.svelte";
@@ -237,7 +238,7 @@
 					title: data?.message ?? "Failed to get appeals.",
 					icon: "error"
 				});
-			},
+			}
 		);
 	}
 
