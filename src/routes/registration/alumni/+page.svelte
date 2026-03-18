@@ -244,7 +244,7 @@
 	});
 </script>
 
-<div class={twMerge("w-screen h-screen bg-gray-100 text-gray-700 bg-white md:bg-gray-100 pt-6 overflow-x-hidden overflow-y-auto", !scrollCategs.includes(categ) && "flex items-center justify-center pt-0")}>
+<div class={twMerge("w-screen h-screen text-gray-700 bg-white md:bg-gray-100 pt-6 overflow-x-hidden overflow-y-auto", !scrollCategs.includes(categ) && "flex items-center justify-center pt-0")}>
 	<div class={twMerge("flex flex-col items-stretch max-w-4/5 md:w-2/5 md:gap-y-6 md:p-12 md:rounded-3xl md:shadow-lg md:bg-white w-full", scrollCategs.includes(categ) && "mx-auto mb-6")}>
 		<div class="flex flex-col items-stretch gap-y-1 mb-6 md:mb-0">
 			<div class="flex items-center justify-between">
@@ -267,7 +267,7 @@
 						<span class="text-red-500 text-sm">{alumni.last_name.error}</span>
 					{/if}
 				</div>
-				<div class="flex grid grid-cols-5 gap-x-4">
+				<div class="grid grid-cols-5 gap-x-4">
 					<div class="col-span-3 flex flex-col items-stretch">
 						<span class="mb-2 text-sm">First Name</span>
 						<TextField
@@ -335,7 +335,7 @@
 						<span class="text-red-500 text-sm">{alumni.birth_place.error}</span>
 					{/if}
 				</div>
-				<div class="flex grid grid-cols-2 gap-x-4">
+				<div class="grid grid-cols-2 gap-x-4">
 					<div class="flex flex-col items-stretch">
 						<span class="mb-2 text-sm">Gender</span>
 						<select
@@ -721,7 +721,7 @@
 				</div>
 			{/if}
 		</div>
-		<div class="grid grid-cols-2 gap-x-4 mt-2 mt-6 md:mt-0">
+		<div class="grid grid-cols-2 gap-x-4 mt-6 md:mt-0">
 			{#if categ === 0}
 				<Button
 					onclick={() => goto("/registration")}

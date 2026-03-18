@@ -1,6 +1,7 @@
 <script>
 	import { API_BASE_URL } from "$lib/app/core/constants";
 	import { AlumniService } from "$lib/app/services/users/alumni";
+	import { settings } from "$lib/app/stores/alumni";
 	import { user } from "$lib/app/stores/user";
 	import { Toast } from "$lib/app/utils/swal";
 	import LikesListModal from "$lib/components/grouped/users/alumni/LikesListModal.svelte";
@@ -24,7 +25,6 @@
 	let jobPostsReady = $state(false);
 	let loadingMore = $state(false);
 	let sentinel = $state(null);
-	let profileViewOn = $state(false);
 	let likedPostsOpen = $state(false);
 	let cvSubmittedPostsOpen = $state(false);
 
@@ -79,14 +79,6 @@
 
 		await new Promise(r => setTimeout(r, 1000));
 		loadingMore = false;
-	}
-
-	function onOpenProfileView() {
-		profileViewOn = true;
-	}
-
-	function onExitProfileView() {
-		profileViewOn = false;
 	}
 
 	$effect(() => {
@@ -149,7 +141,10 @@
 					</div>
 					<Button
 						Icon={Eye}
-						onclick={onOpenProfileView}
+						onclick={() => {
+							$settings.open = true;
+							$settings.tab = "profile";
+						}}
 						label="My Profile"
 						class="w-full border border-blue-500 text-blue-500 bg-transparent"
 					/>
@@ -206,10 +201,6 @@
 		</div>
 	{/if}
 </div>
-
-{#if profileViewOn}
-	<ProfileViewModal onExit={onExitProfileView}/>
-{/if}
 
 {#if likedPostsOpen}
 	<LikesListModal

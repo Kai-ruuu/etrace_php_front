@@ -112,7 +112,7 @@
                     >
                         <div class={
                             twMerge(
-                                "text-nowrap absolute left-0 top-0 h-full w-full translate-y-[1px] pt-3 border-gray-200",
+                                "text-nowrap absolute left-0 top-0 h-full w-full translate-y-px pt-3 border-gray-200",
                                 sourceRole === "sysad" ? "border-r border-l border-t rounded-tl-lg rounded-tr-lg bg-white" : "border-b text-gray-400"
                             )
                         }>System Administrator</div>
@@ -127,7 +127,7 @@
                     >
                         <div class={
                             twMerge(
-                                "text-nowrap absolute left-0 top-0 h-full w-full translate-y-[1px] pt-3 border-gray-200",
+                                "text-nowrap absolute left-0 top-0 h-full w-full translate-y-px pt-3 border-gray-200",
                                 sourceRole === "pstaff" ? "border-r border-l border-t rounded-tl-lg rounded-tr-lg bg-white" : "border-b text-gray-400"
                             )
                         }>PESO Staff</div>
@@ -180,7 +180,7 @@
                                             />
                                             <h1 class="col-span-11">{req.display}</h1>
                                             <div class="flex items-center gap-x-2">
-                                                {#if req.status !== "Approved"}
+                                                {#if req.status === "Rejected"}
                                                     <Button
                                                         title="View PESO Staf's revision requests"
                                                         Icon={NotebookPen}
@@ -205,6 +205,8 @@
                                                         display={req.display}
                                                         source={req.source}
                                                     />
+                                                {:else}
+                                                    <span>-</span>
                                                 {/if}
                                             </div>
                                         </div>
@@ -218,7 +220,7 @@
                                         />
                                         <h1 class="col-span-11">List of Vacancies</h1>
                                         <div class="flex items-center gap-x-2">
-                                            {#if $user.profile.stat_req_list_of_vacancies !== "Approved"}
+                                            {#if $user.profile.stat_req_list_of_vacancies === "Rejected"}
                                                 <Button
                                                     title="View PESO Staf's revision requests"
                                                     Icon={NotebookPen}
@@ -233,13 +235,15 @@
                                                     onclick={() => vacViewOpen = true}
                                                     class="bg-blue-500"
                                                 />
+                                            {:else}
+                                                <span>-</span>
                                             {/if}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         {:else}
-                            {#if $user.profile.ver_stat_pstaff !== "Verified"}
+                            {#if $user.profile.ver_stat_pstaff === "Rejected"}
                                 <div class="w-full px-6 pt-2 space-y-6">
                                     {#if rejectionsReady && rejections.length > 0}
                                         {#each rejections as rejection}

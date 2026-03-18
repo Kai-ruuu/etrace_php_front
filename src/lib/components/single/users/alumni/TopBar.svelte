@@ -7,6 +7,9 @@
 	import { AuthService } from "$lib/app/services/auth";
 	import { goto } from "$app/navigation";
 	import { Toast } from "$lib/app/utils/swal";
+	import { settings } from "$lib/app/stores/alumni";
+	import ProfileViewModal from "$lib/components/grouped/users/alumni/ProfileViewModal.svelte";
+	import SettingsViewModal from "$lib/components/grouped/users/alumni/SettingsViewModal.svelte";
 
     let {
         query = $bindable(""),
@@ -80,7 +83,7 @@
                 </div>
             </button>
             {#if meDownOpen}
-                <div class="absolute bottom-0 right-0 translate-y-[100%] border border-gray-200 bg-white rounded-lg px-6 pt-6 py-4 space-y-4 z-100">
+                <div class="absolute bottom-0 right-0 translate-y-full border border-gray-200 bg-white rounded-lg px-6 pt-6 py-4 space-y-4 z-100">
                     <div class="flex items-center gap-x-4">
 						<div
 							style="background-image: url({API_BASE_URL + `/uploads/alumni/profile_picture/${$user.profile.file_profile_picture}`})"
@@ -96,20 +99,28 @@
 						</div>
 					</div>
                     <div class="">
-                        <a
-                            href="/"
+                        <button
+                            onclick={() => {
+                                meDownOpen = false;
+                                $settings.open = true;
+                                $settings.tab = "profile";
+                            }}
                             class="flex items-center gap-x-2 w-full py-2 cursor-pointer"
                         >
                             <User class="min-w-4 max-w-4"/>
                             <span>Profile</span>
-                        </a>
-                        <a
-                            href="/"
+                        </button>
+                        <button
+                            onclick={() => {
+                                meDownOpen = false;
+                                $settings.open = true;
+                                $settings.tab = "settings";
+                            }}
                             class="flex items-center gap-x-2 w-full py-2 cursor-pointer"
                         >
                             <Settings class="min-w-4 max-w-4"/>
                             <span>Settings</span>
-                        </a>
+                        </button>
                         <button
                             onclick={onLogout}
                             class="flex items-center gap-x-2 w-full py-2 cursor-pointer"
@@ -130,3 +141,17 @@
         </div>
     </nav>
 </div>
+
+{#if $settings.open}
+    {#if $settings.tab === "profile"}
+        <ProfileViewModal onExit={() => {
+            $settings.open = false;
+            $settings.tab = null;
+        }}/>
+    {:else}
+        <SettingsViewModal onExit={() => {
+            $settings.open = false;
+            $settings.tab = null;
+        }}/>
+    {/if}
+{/if}

@@ -31,6 +31,31 @@ export class SchoolService {
         }
     }
 
+    static async allActive(onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath("/api/schools/active"), { credentials: "include" });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async all(onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath("/api/schools"), {
+                credentials: "include",
+                headers: { "Content-Type": "application/json" }
+            });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     static async search(
         q = "",
         {

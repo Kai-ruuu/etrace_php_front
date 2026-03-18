@@ -168,13 +168,13 @@
 </div>
 
 {#if alumniOccMapOpen}
-    <AlumniOccMapModal
-        address={alumniOccAddress}
-        onExit={() => {
-            alumniOccAddress = null;
-            alumniOccMapOpen = false;
-        }}
-    />
+<AlumniOccMapModal
+    address={alumniOccAddress}
+    onExit={() => {
+        alumniOccAddress = null;
+        alumniOccMapOpen = false;
+    }}
+/>
 {/if}
 
 {#if findInRecordsOpen}

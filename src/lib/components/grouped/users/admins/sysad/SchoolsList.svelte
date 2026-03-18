@@ -21,16 +21,11 @@
 </script>
 
 <div class="flex flex-col items-stretch overflow-hidden h-full">
-	<HeadBar
-        title="Manage Schools"
-        BtnIcon={archived ? null : Plus}
-        btnLabel={archived ? null : "Add"}
-        onBtnClick={archived ? null : onAdd}
-    />
+	<HeadBar title="Manage Schools"/>
 	<div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6 min-w-max">
             <div class="border border-gray-200 rounded-lg bg-white space-y-2 overflow-clip my-6">
-                <div class="sticky top-0 left-0 px-6 bg-white pt-6">
+                <div class="sticky top-0 left-0 px-6 bg-white pt-6 flex items-center gap-x-2">
                     <TextField
                         bind:value={query}
                         placeholder="Search schools",
@@ -39,7 +34,16 @@
                         btnOnclick={onSearch}
                         allowClear={true}
                         onClear={onQueryClear}
+                        class="grow"
                     />
+                    {#if !archived}
+                        <Button
+                            Icon={Plus}
+                            label="Add"
+                            onclick={onAdd}
+                            class="bg-green-500"
+                        />
+                    {/if}
                 </div>
                 {#if schoolsInfo.data.length > 0}
                     <div class="px-6">

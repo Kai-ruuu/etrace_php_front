@@ -108,7 +108,7 @@
 			<div class="border border-gray-200 rounded-lg bg-white overflow-clip my-6">
 				{#if updateOn}
 					<div class="p-6 flex flex-col gap-y-4">
-						<h1>Update Profile (Turn this into a modal)</h1>
+						<h1>Update Profile</h1>
 						<div class="flex items-center gap-x-4">
 							<div class="grow grid grid-cols-3 gap-x-4">
 								<TextField
@@ -182,7 +182,7 @@
 			<div class="border border-gray-200 rounded-lg bg-white overflow-clip my-6 flex items-center justify-between p-6">
 				{#if updatePasswordOn}
 					<div class="flex flex-col items-stretch gap-y-4">
-						<h1>Update Password (Turn this into a modal)</h1>
+						<h1>Update Password</h1>
 						<div class="flex items-center gap-x-4">
 							<div class="grow grid grid-cols-3 gap-x-4">
 								<PasswordField placeholder="Current Password" bind:value={password.oldPass}/>

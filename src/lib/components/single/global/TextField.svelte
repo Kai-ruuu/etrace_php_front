@@ -21,7 +21,7 @@
     let timeout;
 </script>
 
-<div class={twMerge("flex items-center items-stretch border border-gray-300 rounded-lg overflow-clip", className)}>
+<div class={twMerge("flex items-stretch border border-gray-300 rounded-lg overflow-clip", className)}>
     {#if Icon}
         <div class="border-r border-r-gray-300 min-w-12 flex items-center justify-center bg-white">
             <Icon class="w-5"/>

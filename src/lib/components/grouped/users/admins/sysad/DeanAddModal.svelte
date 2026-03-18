@@ -21,7 +21,7 @@
         school_id: 0,
     });
 
-    onMount(async () => await SchoolService.all(
+    onMount(async () => await SchoolService.allActive(
         async (data, status) => {
             schools = data;
 

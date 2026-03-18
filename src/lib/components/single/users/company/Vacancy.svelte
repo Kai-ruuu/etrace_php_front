@@ -41,13 +41,30 @@
         confirmDeleteOn = true;
     }
 
-    async function onConfirmDeleteVacancy() {
-        vacancies = vacancies.filter((v) => v.job_title !== vacancy.job_title);
+    async function onCancelDeleteVacancy() {
         confirmDeleteOn = false;
     }
 
-    async function onCancelDeleteVacancy() {
-        confirmDeleteOn = false;
+    async function onConfirmDelVacancy() {
+        await CompanyService.deleteVacancy(vacancy.id,
+            async (data, stat) => {
+                vacancies = vacancies.filter((v) => v.job_title !== vacancy.job_title);
+                confirmDeleteOn = false;
+                
+                await Toast.fire({
+                    title: data?.message ?? "Vacancy has been deleted.",
+                    icon: "success"
+                });
+            },
+            async (data, stat) => {
+                confirmDeleteOn = false;
+
+                await Toast.fire({
+                    title: data?.message ?? "Unable to delete vacancy.",
+                    icon: "error"
+                });
+            },
+        );
     }
 
     async function onVacEditVacancy() {
@@ -380,7 +397,7 @@
 {#if confirmDeleteOn}
     <ConfirmPopup
         confirmText={`Delete "${vacancy.job_title}"?`}
-        onConfirm={onConfirmDeleteVacancy}
+        onConfirm={onConfirmDelVacancy}
         onCancel={onCancelDeleteVacancy}
     />
 {/if}

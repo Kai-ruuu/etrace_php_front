@@ -185,7 +185,6 @@ export class CompanyService {
         }
     }
 
-    
     static async getRevisionAppeals(details, onSuccess, onFail) {
         try {
             let url = `/api/users/company/${details.companyId}/revision-appeals?attr_name=${details.attr_name}`;
@@ -285,6 +284,20 @@ export class CompanyService {
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(details)
+            });
+            const data = await res.json();
+            
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async deleteVacancy(id, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/vacancy/${id}/delete`), {
+                method: "DELETE",
+                credentials: "include"
             });
             const data = await res.json();
             
@@ -410,6 +423,21 @@ export class CompanyService {
                 method: "PATCH",
                 credentials: "include",
                 body: JSON.stringify({ open_until })
+            });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async updateProfile(companyId, formData, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/company/${companyId}/update-profile`), {
+                method: "POST",
+                credentials: "include",
+                body: formData
             });
             const data = await res.json();
 

@@ -6,6 +6,7 @@
 	import { CompanyService } from "$lib/app/services/users/company";
 	import { Toast } from "$lib/app/utils/swal";
 	import { onDestroy } from "svelte";
+	import { user } from "$lib/app/stores/user";
 
     let {
         key,
@@ -24,8 +25,16 @@
             async (data, stat) => {
                 file = null;
                 uploadConfirmOpen = false;
-                
-                URL.revokeObjectURL(url);
+
+                $user.profile[key] = data.filename;
+
+                if (["Pending", "Verified"].includes($user.profile["ver_stat_pstaff"])) {
+                    $user.profile["ver_stat_pstaff"] = "Pending";
+                    $user.profile["stat_" + key] = "Pending";
+                }
+
+                console.log($user.profile);
+
                 await Toast.fire({
                     title: data?.message ?? "Requirement revision has been uploaded.",
                     icon: "success"

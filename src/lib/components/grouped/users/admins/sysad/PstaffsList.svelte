@@ -20,12 +20,7 @@
 </script>
 
 <div class="flex flex-col items-stretch overflow-hidden h-full">
-	<HeadBar
-        title="Manage PESO Staffs"
-        BtnIcon={enabled ? Plus : null}
-        btnLabel={enabled ? "Add" : null}
-        onBtnClick={enabled ? onAdd : null}
-    />
+	<HeadBar title="Manage PESO Staffs"/>
 	<div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6 min-w-max">
             <div class="border border-gray-200 rounded-lg bg-white space-y-2 overflow-clip my-6">
@@ -48,6 +43,14 @@
                         onClear={onQueryClear}
                         class="grow"
                     />
+                    {#if enabled}
+                        <Button
+                            Icon={Plus}
+                            label="Add"
+                            onclick={onAdd}
+                            class="bg-green-500"
+                        />
+                    {/if}
                 </div>
                 {#if pstaffsInfo.data.length > 0}
                     <div class="px-6">
