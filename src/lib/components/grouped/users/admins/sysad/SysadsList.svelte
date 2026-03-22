@@ -70,6 +70,7 @@
                                         <td class="pl-4 flex items-center gap-x-2">
                                             {#if !sysad.default_sysad}
                                                 <Button
+                                                    title={enabled ? "Disable" : "Enable"}
                                                     Icon={enabled ? PowerOff : Power}
                                                     size="s"
                                                     class={enabled ? "bg-red-500" : "bg-green-500"}

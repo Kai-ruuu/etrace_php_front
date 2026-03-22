@@ -14,6 +14,8 @@
         alumniInfo,
         courses,
         onSearch,
+        onDisable,
+        onEnable,
         onNext,
         onPrev,
         onProfileView,
@@ -25,7 +27,7 @@
 </script>
 
 <div class="flex flex-col items-stretch overflow-hidden h-full">
-	<HeadBar title="Verify Alumni"/>
+	<HeadBar title="Manage Alumni"/>
 	<div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6 min-w-max">
             <div class="border border-gray-200 rounded-lg bg-white space-y-2 overflow-clip my-6">
@@ -67,7 +69,7 @@
                         class="grow"
                     />
                 </div>
-                {#if alumniInfo.data.length > 0}
+                {#if (alumniInfo?.data) && alumniInfo?.data?.length > 0}
                     <div class="px-6">
                         <table>
                             <thead>
@@ -97,6 +99,18 @@
                                         <td class="py-2 pl-4 text-nowrap">{alumni.profile.phone_number}</td>
                                         <td class="py-2 pl-4 text-nowrap">{alumni.profile.employment_status}</td>
                                         <td class="pl-4 flex items-center gap-x-2">
+                                            <Button
+                                                Icon={enabled ? PowerOff : Power}
+                                                size="s"
+                                                class={enabled ? "bg-red-500" : "bg-green-500"}
+                                                onclick={async () => {
+                                                    if (enabled) {
+                                                        await onDisable(alumni);
+                                                    } else {
+                                                        await onEnable(alumni);
+                                                    }
+                                                }}
+                                            />
                                             <Button
                                                 title="View Profile"
                                                 Icon={UserSearch}

@@ -180,33 +180,31 @@
                                             />
                                             <h1 class="col-span-11">{req.display}</h1>
                                             <div class="flex items-center gap-x-2">
-                                                {#if req.status === "Rejected"}
-                                                    <Button
-                                                        title="View PESO Staf's revision requests"
-                                                        Icon={NotebookPen}
-                                                        size="s"
-                                                        onclick={() => onOpenReviseRequests($user.profile.id, req.display, req.pureName)}
-                                                        class="bg-blue-500"
-                                                    />
-                                                    <Button
-                                                        title="View Requirement"
-                                                        Icon={Eye}
-                                                        size="s"
-                                                        onclick={() => {
-                                                            previewOpen = true;
-                                                            previewFile = req.file;
-                                                            previewFileSource = req.source;
-                                                            previewDisplay = req.display;
-                                                        }}
-                                                        class="bg-blue-500"
-                                                    />
+                                                <Button
+                                                    title="View PESO Staf's revision requests"
+                                                    Icon={NotebookPen}
+                                                    size="s"
+                                                    onclick={() => onOpenReviseRequests($user.profile.id, req.display, req.pureName)}
+                                                    class="bg-blue-500"
+                                                />
+                                                <Button
+                                                    title="View Requirement"
+                                                    Icon={Eye}
+                                                    size="s"
+                                                    onclick={() => {
+                                                        previewOpen = true;
+                                                        previewFile = req.file;
+                                                        previewFileSource = req.source;
+                                                        previewDisplay = req.display;
+                                                    }}
+                                                    class="bg-blue-500"
+                                                />
+                                                {#if req.status !== "Pending"}
                                                     <ReuploadButton
                                                         key={req.pureName}
                                                         display={req.display}
                                                         source={req.source}
                                                     />
-                                                {:else}
-                                                    <span>-</span>
                                                 {/if}
                                             </div>
                                         </div>
@@ -220,24 +218,20 @@
                                         />
                                         <h1 class="col-span-11">List of Vacancies</h1>
                                         <div class="flex items-center gap-x-2">
-                                            {#if $user.profile.stat_req_list_of_vacancies === "Rejected"}
-                                                <Button
-                                                    title="View PESO Staf's revision requests"
-                                                    Icon={NotebookPen}
-                                                    size="s"
-                                                    onclick={() => onOpenReviseRequests($user.profile.id, "List of Vacancies", "req_list_of_vacancies")}
-                                                    class="bg-blue-500"
-                                                />
-                                                <Button
-                                                    title="Update"
-                                                    Icon={Pen}
-                                                    size="s"
-                                                    onclick={() => vacViewOpen = true}
-                                                    class="bg-blue-500"
-                                                />
-                                            {:else}
-                                                <span>-</span>
-                                            {/if}
+                                            <Button
+                                                title="View PESO Staf's revision requests"
+                                                Icon={NotebookPen}
+                                                size="s"
+                                                onclick={() => onOpenReviseRequests($user.profile.id, "List of Vacancies", "req_list_of_vacancies")}
+                                                class="bg-blue-500"
+                                            />
+                                            <Button
+                                                title="Update"
+                                                Icon={Pen}
+                                                size="s"
+                                                onclick={() => vacViewOpen = true}
+                                                class="bg-blue-500"
+                                            />
                                         </div>
                                     </div>
                                 </div>

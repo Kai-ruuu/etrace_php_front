@@ -37,10 +37,11 @@
 
     function formatProfile(alumni) {
         const p = alumni.profile;
-        
+        let [year, month, day] = p.birth_date.split("-");
+
         return {
             student_number: p.student_number,
-            birth_date: p.birth_date,
+            birth_date: `${year}-${parseInt(month)}-${parseInt(day)}`,
             birth_place: p.birth_place,
             last_name: p.last_name,
             first_name: p.name_extension

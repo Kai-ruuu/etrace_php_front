@@ -66,6 +66,9 @@
 			async (data, status) => {
 				addModalOpen = false;
 				await searchRecords();
+
+				console.log(data);
+
 				await Toast.fire({
 					title: data?.message ?? "Graduate record has been created.",
 					icon: "success"
@@ -73,6 +76,9 @@
 			},
 			async (data, status) => {
 				addModalOpen = false;
+
+				console.log(data);
+				
 				await Toast.fire({
 					title: data?.message ?? "Failed to create graduate record.",
 					icon: "error"

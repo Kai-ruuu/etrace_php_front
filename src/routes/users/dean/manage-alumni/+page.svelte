@@ -18,7 +18,8 @@
 	let confirmVerifyPopupAlumni = $state(null);
 	let confirmRejectPopupOpen = $state(false);
 	let confirmRejectPopupAlumni = $state(null);
-	
+	let confirmEndisPopupOpen = $state(false);
+	let confirmEndisPopupAlumni = $state(null);
     let alumniInfo = $state({
 		data: [],
 		total: 0,
@@ -57,10 +58,74 @@
 		await searchAlumni();
 	}
 
+	async function onEnable(pstaff) {
+		confirmEndisPopupOpen = true;
+		confirmEndisPopupAlumni = pstaff;
+	}
+
+	async function onDisable(pstaff) {
+		confirmEndisPopupOpen = true;
+		confirmEndisPopupAlumni = pstaff;
+	}
+
 	async function onQueryClear() {
 		query = "";
 		alumniInfo.page = 1;
 		await searchAlumni();
+	}
+
+	async function onConfirmEndis() {
+		if (enabled) {
+			await AlumniService.disable(
+				confirmEndisPopupAlumni,
+				async (data, status) => {
+					confirmEndisPopupOpen = false;
+					confirmEndisPopupAlumni = null;
+	
+					await searchAlumni();
+					await Toast.fire({
+						title: data?.message ?? "Alumni has been disabled.",
+						icon: "success"
+					})
+				},
+				async (data, status) => {
+					confirmEndisPopupOpen = false;
+					confirmEndisPopupAlumni = null;
+	
+					await Toast.fire({
+						title: data?.message ?? "Failed to disable alumni.",
+						icon: "error"
+					})
+				},
+			)
+		} else {
+			await AlumniService.enable(
+				confirmEndisPopupAlumni,
+				async (data, status) => {
+					confirmEndisPopupOpen = false;
+					confirmEndisPopupAlumni = null;
+	
+					await searchAlumni();
+					await Toast.fire({
+						title: data?.message ?? "Alumni has been disabled.",
+						icon: "success"
+					})
+				},
+				async (data, status) => {
+					confirmEndisPopupOpen = false;
+					confirmEndisPopupAlumni = null;
+	
+					await Toast.fire({
+						title: data?.message ?? "Failed to enable alumni.",
+						icon: "error"
+					})
+				},
+			)
+		}
+	}
+
+	async function onCancelEndis() {
+		confirmEndisPopupOpen = false;
 	}
 
 	async function onPrev() {
@@ -231,6 +296,8 @@
 			{alumniInfo}
 			{courses}
 			{onSearch}
+			{onDisable}
+			{onEnable}
 			{onPrev}
 			{onNext}
 			{onQueryClear}
@@ -238,6 +305,13 @@
 			{onVerify}
 			{onReject}
 			{onViewRejections}
+		/>
+	{/if}
+	{#if confirmEndisPopupOpen}
+		<ConfirmPopup
+			confirmText={`${enabled ? "Disable" : "Enable"} ${confirmEndisPopupAlumni.email}?`}
+			onConfirm={onConfirmEndis}
+			onCancel={onCancelEndis}
 		/>
 	{/if}
 {/if}

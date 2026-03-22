@@ -216,4 +216,32 @@ export class AlumniService {
             console.error(err);
         }
     }
+
+    static async disable(alumni, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/${alumni.id}/disable`), {
+                method: "PATCH",
+                credentials: "include",
+            });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async enable(alumni, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/${alumni.id}/enable`), {
+                method: "PATCH",
+                credentials: "include",
+            });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 }

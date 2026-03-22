@@ -9,7 +9,7 @@
     } = $props();
 </script>
 
-{#if info.total_pages > 0}
+{#if (info?.total_pages) && (info?.total_pages > 0)}
     <div class="sticky bottom-0 left-0 bg-white border-t border-t-gray-200 px-6 py-3 rounded-bl-lg rounded-br-lg flex items-center justify-between">
         <p>Page {info.page} of {info.total_pages}</p>
         <div class="flex items-center gap-x-2">

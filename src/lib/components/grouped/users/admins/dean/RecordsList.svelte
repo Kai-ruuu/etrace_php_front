@@ -57,7 +57,7 @@
                         />
                     {/if}
                 </div>
-                {#if recordsInfo.data.length > 0}
+                {#if (recordsInfo?.data) && recordsInfo?.data?.length > 0}
                     <div class="px-6">
                         <table>
                             <thead>

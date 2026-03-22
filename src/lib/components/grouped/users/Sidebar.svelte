@@ -73,7 +73,7 @@
                 <SidebarLink Icon={BookCopy} label="Courses" path="/users/dean/manage-courses"/>
                 <SidebarLink Icon={Link} label="Occupations" path="/users/dean/manage-occupations"/>
                 <SidebarLink Icon={Scroll} label="Graduate Records" path="/users/dean/manage-records"/>
-                <SidebarLink Icon={User} label="Alumni Verification" path="/users/dean/alumni-verification"/>
+                <SidebarLink Icon={User} label="Manage Alumni" path="/users/dean/manage-alumni"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/dean/account"/>
@@ -141,7 +141,7 @@
                 <SidebarLink Icon={BookCopy} label="Courses" path="/users/dean/manage-courses"/>
                 <SidebarLink Icon={Link} label="Occupations" path="/users/dean/manage-occupations"/>
                 <SidebarLink Icon={Scroll} label="Graduate Records" path="/users/dean/manage-records"/>
-                <SidebarLink Icon={User} label="Alumni Verification" path="/users/dean/alumni-verification"/>
+                <SidebarLink Icon={User} label="Manage Alumni" path="/users/dean/manage-alumni"/>
             </SidebarLinkParent>
             <SidebarLinkParent Icon={Settings} label="Settings">
                 <SidebarLink Icon={User} label="Account" path="/users/dean/account"/>

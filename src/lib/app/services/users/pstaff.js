@@ -17,6 +17,17 @@ export class PstaffService {
         }
     }
 
+    static async getAnalytics(onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath("/api/analytics"), { credentials: "include" });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     static async search(
         q = "",
         {

@@ -62,7 +62,7 @@
         {#if !forPstaff}
             <p class="mb-2 p-0">Remember to write an appeal if needed or revise and reupload the requirement.</p>
         {/if}
-        <div>
+        <div class="space-y-4">
             {#each revisions as revision}
                 <Revision
                     {revision}
