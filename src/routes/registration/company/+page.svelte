@@ -2,6 +2,7 @@
 	import { goto } from "$app/navigation";
 	import { CompanyService } from "$lib/app/services/users/company";
 	import { Toast } from "$lib/app/utils/swal";
+	import ConsentModal from "$lib/components/grouped/users/company/ConsentModal.svelte";
 	import BaseContainer from "$lib/components/single/global/BaseContainer.svelte";
 	import Button from "$lib/components/single/global/Button.svelte";
 	import EmailField from "$lib/components/single/global/EmailField.svelte";
@@ -78,6 +79,7 @@
 		"cert_from_dole",
 		"cert_no_case",
 	];
+	let consentOpen = $state(false);
 
 	function validateTextRequires() {
 		let noErrors = true;
@@ -134,26 +136,6 @@
 	}
 
 	async function onSubmit() {
-		let hasErrors = false;
-		
-		hasErrors = !validateTextRequires();
-		hasErrors = !validateFileRequires();
-		
-		if (company.vacancies.length === 0) {
-			hasNoVacancies = true;
-			hasErrors = true;
-		} else {
-			hasNoVacancies = false;
-		}
-
-		if (hasErrors) {
-			await Toast.fire({
-				title: "Please fill in all required fields before submitting.",
-				icon: "error"
-			});
-			return;
-		}
-		
 		const newCompany = toFormData();
 
 		await CompanyService.create(newCompany,
@@ -171,6 +153,10 @@
 				});
 			},
 		);
+	}
+
+	async function onCancel() {
+		consentOpen = false;
 	}
 </script>
 
@@ -872,7 +858,29 @@
 			{/if}
 			{#if categ === maxCateg - 1}
 				<Button
-					onclick={onSubmit}
+					onclick={async () => {
+						let hasErrors = false;
+		
+						hasErrors = !validateTextRequires();
+						hasErrors = !validateFileRequires();
+						
+						if (company.vacancies.length === 0) {
+							hasNoVacancies = true;
+							hasErrors = true;
+						} else {
+							hasNoVacancies = false;
+						}
+
+						if (hasErrors) {
+							await Toast.fire({
+								title: "Please fill in all required fields before submitting.",
+								icon: "error"
+							});
+							return;
+						}
+
+						consentOpen = true;
+					}}
 					Icon={Check}
 					iconPos="r"
 					label="Register"
@@ -881,3 +889,7 @@
 		</div>
 	</div>
 </div>
+
+{#if consentOpen}
+	<ConsentModal onExit={onCancel} onProceed={onSubmit}/>
+{/if}

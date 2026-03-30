@@ -88,9 +88,7 @@
                         const pVals = String(value).toLowerCase().split(" ");
                         const rVals = String(r[key]).toLowerCase().split(" ");
 
-                        const pHasMatch = pVals.some(pv => rVals.includes(pv));
-                        const rHasMatch = rVals.some(rv => pVals.includes(rv));
-                        const hasMatch = pHasMatch || rHasMatch;
+                        const hasMatch = pVals.some(pv => rVals.includes(pv));
 
                         rowScore += hasMatch ? 1 : 0;
                         formattedRow[key] = { value: r[key], matched: hasMatch };

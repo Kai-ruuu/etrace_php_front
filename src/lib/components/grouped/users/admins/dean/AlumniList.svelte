@@ -75,7 +75,6 @@
                             <thead>
                                 <tr>
                                     <th class="text-left py-2">Name</th>
-                                    <th class="text-left pl-4 py-2">Email</th>
                                     <th class="text-left pl-4 py-2">Year Graduated</th>
                                     <th class="text-left pl-4 py-2">Gender</th>
                                     <th class="text-left pl-4 py-2">Birth Date</th>
@@ -92,7 +91,6 @@
                                             {alumni.profile.middle_name && (" " + alumni.profile.middle_name + " ")}
                                             {alumni.profile.last_name}
                                         </td>
-                                        <td class="py-2 pl-4 text-nowrap">{alumni.email}</td>
                                         <td class="py-2 pl-4 text-nowrap">{alumni.profile.graduation_year}</td>
                                         <td class="py-2 pl-4 text-nowrap">{alumni.profile.gender}</td>
                                         <td class="py-2 pl-4 text-nowrap">{alumni.profile.birth_date}</td>

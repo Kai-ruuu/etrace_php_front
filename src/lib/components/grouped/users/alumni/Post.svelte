@@ -188,20 +188,14 @@
     {/if}
 
     <hr class="border-t border-gray-200">
-    <div class="w-full flex justify-end gap-x-4">
+    <div class="w-full flex justify-end">
         <button
             onclick={onToggleLike}
-            class={twMerge("flex items-center gap-x-2 border-r border-gray-300 pr-4 cursor-pointer", post.is_liked && "text-blue-500")}
+            class={twMerge("flex items-center gap-x-2 pr-4 cursor-pointer", post.is_liked && "text-blue-500")}
         >
             <ThumbsUp class="min-w-4 max-w-4"/>
             <span>{post.likes} {post.likes === 1 ? "Like" : "Likes"}</span>
         </button>
-        <div
-            class={twMerge("flex items-center gap-x-2 border-r border-gray-300 pr-4", post.is_submitted && "text-blue-500")}
-        >
-            <File class="min-w-4 max-w-4"/>
-            <span>{post.submissions} CV {post.submissions === 1 ? "Submission" : "Submissions"}</span>
-        </div>
         {#if post.is_submitted}
             <Button
                 Icon={X}

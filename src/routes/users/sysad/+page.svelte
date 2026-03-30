@@ -1,8 +1,11 @@
 <script>
+	import { AlumniService } from "$lib/app/services/users/alumni";
 	import { SysadService } from "$lib/app/services/users/sysad";
 	import { user } from "$lib/app/stores/user";
 	import { Toast } from "$lib/app/utils/swal";
 	import HeadBar from "$lib/components/grouped/users/admins/HeadBar.svelte";
+	import Button from "$lib/components/single/global/Button.svelte";
+	import { Download } from "lucide-svelte";
 	import { onMount } from "svelte";
 	import { twMerge } from "tailwind-merge";
 
@@ -26,13 +29,15 @@
 		{ label: 'Companies',           key: 'company', bar: 'bg-green-500',  text: 'text-green-600'  },
 	];
 
+	function downloadCsv() {
+		window.open('/api/analytics/report', '_blank')
+	}
+
 	onMount(async () => {
 		dataLoading = true;
 		
 		await SysadService.getAnalytics(
 			async (d, status) => {
-				console.log(d);
-
 				data = d;
 				dataLoading = false;
 				alumni = data?.alumni;
@@ -297,6 +302,22 @@
 					</div>
 				</section>
 			
+				<div class="flex flex-col items-end">
+					<Button
+						Icon={Download}
+						label="Export CSV"
+						class="bg-blue-500"
+						size="s"
+						onclick={async () => {
+							let downloaded = await SysadService.downloadCsv();
+
+							if (!downloaded) await Toast.fire({
+								title: "Unable to download csv.",
+								icon: "error"
+							})
+						}}
+					/>
+				</div>
 			</div>
 		</div>
 	{/if}

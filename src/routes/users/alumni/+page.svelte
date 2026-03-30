@@ -1,5 +1,6 @@
 <script>
 	import { API_BASE_URL } from "$lib/app/core/constants";
+	import { GeocodingService } from "$lib/app/services/geocoding";
 	import { AlumniService } from "$lib/app/services/users/alumni";
 	import { settings } from "$lib/app/stores/alumni";
 	import { user } from "$lib/app/stores/user";
@@ -10,7 +11,7 @@
 	import SubmissionsListModal from "$lib/components/grouped/users/alumni/SubmissionsListModal.svelte";
 	import Button from "$lib/components/single/global/Button.svelte";
 	import TopBar from "$lib/components/single/users/alumni/TopBar.svelte";
-	import { BadgeCheck, Briefcase, ChevronRight, Eye, File, MapPin, Phone, ThumbsUp } from "lucide-svelte";
+	import { BadgeCheck, Book, Briefcase, ChevronRight, Eye, File, MapPin, Phone, ThumbsUp } from "lucide-svelte";
 	import { onMount } from "svelte";
 
 	let query = $state("");
@@ -27,8 +28,21 @@
 	let sentinel = $state(null);
 	let likedPostsOpen = $state(false);
 	let cvSubmittedPostsOpen = $state(false);
+	let marker = $state(null);
+	let currentJobInfo = $state({
+		address: "",
+		title: "",
+		startYear: 0,
+	});
+	let map = $state(null);
+	let mapErrMsg = $state("");
+	let mapLoading = $state(false);
+
+	let userProfile = $derived($user.profile);
 
 	async function searchJobPosts() {
+		console.log($user);
+		
 		jobPostsReady = false;
 
 		await AlumniService.searchJobPosts(query, {
@@ -81,6 +95,50 @@
 		loadingMore = false;
 	}
 
+	async function geocodeCurrOccAddress() {
+		mapLoading = true;
+		
+		try {
+			if ($user.profile.employment_status === "Unemployed") return;
+
+			const currOccupation = $user.profile.occupations.filter((o) => o.end_year === null)[0];
+
+			currentJobInfo.address = currOccupation.address;
+			currentJobInfo.title = currOccupation.occupation;
+			currentJobInfo.startYear = currOccupation.start_year;
+			
+            const data = await GeocodingService.geocode(currentJobInfo.address);
+
+			if (typeof data === "string") {
+				mapErrMsg = data;
+				return;
+			}
+
+			const [latitude, longitude, displayName] = data;
+
+            marker?.remove();
+            
+            const L = (await import('leaflet')).default;
+            await import('leaflet/dist/leaflet.css');
+
+			if (map) {
+				map.remove();
+				map = null;
+				marker = null;
+			}
+    
+            map = L.map('map', { zoomControl: false }).setView([latitude, longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            marker = L.marker([latitude, longitude]).addTo(map);
+
+            map.flyTo([latitude, longitude], 15, { animate: true, duration: 1.2 });
+        } catch (error) {
+            console.error(error);
+        } finally {
+			mapLoading = false;
+		}
+    }
+
 	$effect(() => {
 		if (!sentinel) return;
 		const observer = new IntersectionObserver(
@@ -91,7 +149,16 @@
 		return () => observer.disconnect();
 	});
 
-	onMount(searchJobPosts);
+	$effect(() => {
+		const _ = userProfile.employment_status;
+		const __ = userProfile.occupations;
+		
+		geocodeCurrOccAddress();
+	});
+
+	onMount(async () => {
+		await searchJobPosts();
+	});
 </script>
 
 <div class="w-screen h-screen relative">
@@ -114,31 +181,46 @@
 							<span>{$user.email}</span>
 						</div>
 					</div>
-					<hr class="border-t border-gray-200 mt-6 mb-4">
-					<div class="space-y-1">
-						<div class="flex items-center gap-x-2">
-							<BadgeCheck class="min-w-4 max-w-4"/>
-							{#if $user.profile.ver_stat_dean === "Pending"}
-								<span class="text-yellow-500">Pending</span>
-							{:else if $user.profile.ver_stat_dean === "Verified"}
-								<span class="text-blue-500">Verified</span>
-							{:else if $user.profile.ver_stat_dean === "Rejected"}
-								<span class="text-red-500">Rejected</span>
-							{/if}
+					
+					{#if userProfile.employment_status !== "Unemployed"}
+						<div class="flex flex-col items-stretch">
+							<div class="border border-gray-300 rounded-lg p-3 mb-4">
+								<div class="flex items-center justify-between">
+									<div class="flex items-center gap-x-2">
+										<Briefcase class="min-w-4 max-w-4"/>
+										<span>{currentJobInfo.title}</span>
+									</div>
+									<span class="text-sm">{currentJobInfo.startYear} - present</span>
+								</div>
+								<div class="flex items-center gap-x-2">
+									<MapPin class="min-w-4 max-w-4"/>
+									<span>{currentJobInfo.address}</span>
+								</div>
+							</div>
+
+							<div id="map" class="min-h-51 rounded-lg flex items-center justify-center border border-gray-300 z-10">
+								{#if mapLoading}
+									<span>Map Loading...</span>
+								{:else}
+									{#if mapErrMsg}
+										<span>{mapErrMsg}</span>
+									{/if}
+								{/if}
+							</div>
 						</div>
-						<div class="flex items-center gap-x-2">
-							<Briefcase class="min-w-4 max-w-4"/>
-							<span class={$user.profile.employment_status === "Unemployed" ? "text-yellow-500" : "text-green-500"}>{$user.profile.employment_status}</span>
+					{:else}
+						<div>
+							<div class="flex items-center gap-x-2">
+								<Briefcase class="min-w-4 max-w-4"/>
+								<span>Unemployed</span>
+							</div>
+							<div class="flex items-center gap-x-2">
+								<Book class="min-w-4 max-w-4"/>
+								<span>{$user.profile.course.name}</span>
+							</div>
 						</div>
-						<div class="flex items-center gap-x-2">
-							<Phone class="min-w-4 max-w-4"/>
-							<span>{$user.profile.phone_number}</span>
-						</div>
-						<div class="flex items-center gap-x-2">
-							<MapPin class="min-w-4 max-w-4"/>
-							<span>{$user.profile.address}</span>
-						</div>
-					</div>
+					{/if}
+
 					<Button
 						Icon={Eye}
 						onclick={() => {

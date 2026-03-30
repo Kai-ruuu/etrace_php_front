@@ -1,7 +1,10 @@
 <script>
 	import { DeanService } from "$lib/app/services/users/dean";
+	import { SysadService } from "$lib/app/services/users/sysad";
 	import { Toast } from "$lib/app/utils/swal";
 	import HeadBar from "$lib/components/grouped/users/admins/HeadBar.svelte";
+	import Button from "$lib/components/single/global/Button.svelte";
+	import { Download } from "lucide-svelte";
 	import { onMount } from "svelte";
 	import { twMerge } from "tailwind-merge";
 
@@ -241,7 +244,23 @@
 						</div>
 					</div>
 				</section>
+				
+				<div class="flex flex-col items-end">
+					<Button
+						Icon={Download}
+						label="Export CSV"
+						class="bg-blue-500"
+						size="s"
+						onclick={async () => {
+							let downloaded = await DeanService.downloadCsv();
 
+							if (!downloaded) await Toast.fire({
+								title: "Unable to download csv.",
+								icon: "error"
+							})
+						}}
+					/>
+				</div>
 			</div>
 		</div>
 	{/if}

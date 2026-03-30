@@ -1,9 +1,11 @@
 <script>
 	import { goto } from "$app/navigation";
 	import { CourseService } from "$lib/app/services/insti/course";
+	import { OccupationService } from "$lib/app/services/occupation";
 	import { AlumniService } from "$lib/app/services/users/alumni";
 	import { PlatformService } from "$lib/app/services/users/platform";
 	import { Toast } from "$lib/app/utils/swal";
+	import ConsentModal from "$lib/components/grouped/users/alumni/ConsentModal.svelte";
 	import BaseContainer from "$lib/components/single/global/BaseContainer.svelte";
 	import Button from "$lib/components/single/global/Button.svelte";
 	import EmailField from "$lib/components/single/global/EmailField.svelte";
@@ -53,12 +55,16 @@
 	let occu = $state({
 		occupation: { value: "", error: "" },
 		address: { value: "", error: "" },
-		is_current: false,
+		start_year: { value: (new Date()).getFullYear(), error: "" },
+		end_year: { value: null, error: "" },
+		company: { value: "", error: "" },
+		is_current: true,
 	});
 	let social = $state({
 		platform: { value: "", error: "" },
 		url: { value: "", error: "" },
 	});
+	let occupations = $state([]);
 
 	let requiredTexts = [
 		"last_name",
@@ -79,6 +85,7 @@
 		"occupations",
 		"socials",
 	];
+	let consentOpen = $state(false);
 	
 	function validateTextRequires() {
 		let noErrors = true;
@@ -164,7 +171,10 @@
 				const cleaned = value.value.map((o) => ({
 					occupation: o.occupation.value,
 					address: o.address.value,
-					is_current: o.is_current
+					is_current: o.is_current ? 1 : 0,
+					company: o.company.value,
+					start_year: o.start_year.value,
+					end_year: o.end_year.value,
 				}));
 
 				formData.append("occupations", JSON.stringify(cleaned));
@@ -184,38 +194,29 @@
 	}
 	
 	async function onSubmit() {
-		let hasErrors = false;
-
-		hasErrors = !validateTextRequires();
-		hasErrors = !validateFileRequires();
-		hasErrors = !validateListRequires();
-		hasErrors = !validateDateRelated();
-
-		if (hasErrors) {
-			await Toast.fire({
-				title: "Please fill in all required fields before submitting.",
-				icon: "error"
-			});
-			return;
-		}
-
 		const newAlumni = toFormData();
 
 		await AlumniService.create(newAlumni,
 			async (data, status) => {
 				goto("/");
+				consentOpen = false;
 				await Toast.fire({
 					title: data?.message ?? "You are now registered! Welcome to E-trace.",
 					icon: "success"
 				});
 			},
 			async (data, status) => {
+				consentOpen = false;
 				await Toast.fire({
 					title: data?.message ?? "Failed to register, please double check your info.",
 					icon: "error"
 				});
 			},
 		);
+	}
+
+	async function onCancel() {
+		consentOpen = false;
 	}
 
 	onMount(async () => {
@@ -238,6 +239,19 @@
 			},
 			async (data, stat) => await Toast.fire({
 				title: data?.message ?? "Unable to get schools.",
+				icon: "error"
+			}),
+		);
+		await OccupationService.all(
+			async (data, stat) => {
+				console.log(data);
+				
+				if (!data) return;
+				
+				occupations = data;
+			},
+			async (data, stat) => await Toast.fire({
+				title: data?.message ?? "Unable to get occupations.",
 				icon: "error"
 			}),
 		);
@@ -569,9 +583,10 @@
 						{/if}
 						<hr class="border-t border-gray-200 my-4">
 						<h1 class="mb-4">Add Occupation</h1>
-						<div class="flex flex-col items-stretch">
+						<div class="flex flex-col items-stretch mb-2">
 							<span class="mb-2 text-sm">Occupation</span>
 							<TextField
+								list="occupations"
 								onDebounce={(value) => occu.occupation.error = value.trim().length === 0 ? "Occupation is required" : ""}
 								bind:value={occu.occupation.value}
 								placeholder="Occupation"
@@ -579,18 +594,81 @@
 							{#if occu.occupation.error}
 								<span class="text-red-500 text-sm">{occu.occupation.error}</span>
 							{/if}
+							<datalist id="occupations">
+								{#each occupations as occupation}
+									<option value={occupation.occupation}>{occupation.occupation}</option>
+								{/each}
+							</datalist>
 						</div>
+
+						<div class="flex flex-col items-stretch mb-2">
+							<span class="mb-2 text-sm">Company / Business</span>
+							<TextField
+								onDebounce={(value) => occu.company.error = value.trim().length === 0 ? "Company / Business is required" : ""}
+								bind:value={occu.company.value}
+								placeholder="Company / Business"
+							/>
+							{#if occu.company.error}
+								<span class="text-red-500 text-sm">{occu.company.error}</span>
+							{/if}
+						</div>
+
+						
 						<label
 							for="is-current"
-							class="flex item-center gap-x-2 mt-4"
+							class="flex item-center gap-x-2 mt-4 mb-2 cursor-pointer"
 						>
 							<input
+								id="is-current"
 								type="checkbox"
 								bind:checked={occu.is_current}
 								class="rounded"
 							>
-							<span class="mb-2 text-sm">Is current</span>
+							<span class="text-sm">I still work here</span>
 						</label>
+
+						<div class="flex flex-col items-stretch mb-2">
+							<span class="mb-2 text-sm">Start Year</span>
+							<NumberField
+								onDebounce={(value) => {
+									if (parseInt(value) > new Date().getFullYear()) {
+										occu.start_year.error = "Start year is in the future.";
+									} if (occu.end_year.value && parseInt(value) > occu.end_year.value) {
+										occu.start_year.error = "Start year must be earlier than the end year.";
+									} else {
+										occu.start_year.error = "";
+									}
+								}}
+								bind:value={occu.start_year.value}
+								placeholder="Start year"
+							/>
+							{#if occu.start_year.error}
+								<span class="text-red-500 text-sm">{occu.start_year.error}</span>
+							{/if}
+						</div>
+
+						{#if !occu.is_current}
+							<div class="flex flex-col items-stretch mb-2">
+								<span class="mb-2 text-sm">End Year</span>
+								<NumberField
+									onDebounce={(value) => {
+										if (parseInt(value) > new Date().getFullYear()) {
+											occu.end_year.error = "End year is in the future.";
+										} if (parseInt(value) < occu.start_year.value) {
+											occu.end_year.error = "End year must be later than the start year.";
+										} else {
+											occu.end_year.error = "";
+										}
+									}}
+									bind:value={occu.end_year.value}
+									placeholder="End year"
+								/>
+								{#if occu.end_year.error}
+									<span class="text-red-500 text-sm">{occu.end_year.error}</span>
+								{/if}
+							</div>
+						{/if}
+						
 						<div class="flex flex-col items-stretch mt-2">
 							<span class="mb-2 text-sm">Address</span>
 							<TextField
@@ -621,7 +699,10 @@
 								occu = {
 									occupation: { value: "", error: "" },
 									address: { value: "", error: "" },
-									is_current: false,
+									start_year: { value: (new Date()).getFullYear(), error: "" },
+									end_year: { value: null, error: "" },
+									company: { value: "", error: "" },
+									is_current: true,
 								};
 							}}
 							class="bg-green-500 mt-4"
@@ -748,7 +829,24 @@
 			{/if}
 			{#if categ === maxCateg - 1}
 				<Button
-					onclick={onSubmit}
+					onclick={async () => {
+						let hasErrors = false;
+
+						hasErrors = !validateTextRequires();
+						hasErrors = !validateFileRequires();
+						hasErrors = !validateListRequires();
+						hasErrors = !validateDateRelated();
+
+						if (hasErrors) {
+							await Toast.fire({
+								title: "Please fill in all required fields before submitting.",
+								icon: "error"
+							});
+							return;
+						}
+
+						consentOpen = true;
+					}}
 					Icon={Check}
 					iconPos="r"
 					label="Register"
@@ -757,3 +855,7 @@
 		</div>
 	</div>
 </div>
+
+{#if consentOpen}
+	<ConsentModal onExit={onCancel} onProceed={onSubmit}/>
+{/if}

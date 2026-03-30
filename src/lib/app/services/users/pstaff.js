@@ -28,6 +28,28 @@ export class PstaffService {
         }
     }
 
+    static async downloadCsv() {
+        try {
+            const res = await fetch(apiPath('/api/analytics/report'), { credentials: 'include' });
+
+            if (!res.ok) throw new Error('Download failed');
+
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'analytics.csv';
+            a.click();
+
+            URL.revokeObjectURL(url);
+            return true;
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+
     static async search(
         q = "",
         {

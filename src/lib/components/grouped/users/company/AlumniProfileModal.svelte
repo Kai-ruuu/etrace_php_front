@@ -57,6 +57,57 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-6 mt-4">
+                    <div class="flex flex-col space-y-2 md:col-span-3 border border-gray-200 rounded-lg p-6">
+                        <h1 class="text-lg font-bold text-gray-500">Career Information</h1>
+                        <div class="flex flex-col w-full">
+                            <span class="text-sm text-gray-400">Employment Status</span>
+                            <span>{alumni.profile.employment_status}</span>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <span class="text-sm text-gray-400">Curriculum Vitae</span>
+                            <div class="flex items-center gap-x-2 text-blue-700">
+                                <File class="min-w-4 max-w-4"/>
+                                <a
+                                    href={API_BASE_URL + "/uploads/alumni/cv/" + alumni.profile.file_cv}
+                                    target="_blank"
+                                >View CV</a>
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <span class="text-sm text-gray-400 mb-2">Occupation History</span>
+                            <div class="w-full border border-gray-300 rounded-lg [&>*:not(:last-child)]:border-b [&>*:not(:last-child)]:border-b-gray-300">
+                                {#each [...alumni.profile.occupations].sort((a, b) => {
+                                    if (a.is_current !== b.is_current) return a.is_current ? -1 : 1;
+                                    return b.start_year - a.start_year;
+                                }) as occupation}
+                                    <div class="flex items-center justify-between mt-2 px-4 pt-2 pb-4">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-center gap-x-2">
+                                                <Briefcase class="min-w-4 max-w-4"/>
+                                                <span>{occupation.occupation} {occupation.is_current ? "(current)" : ""}</span>
+                                            </div>
+                                            <span>{occupation.company}</span>
+                                            <span>{occupation.start_year} - {occupation.end_year ? occupation.end_year : "Present"}</span>
+                                        </div>
+                                        {#if occupation.is_current}
+                                            <div>
+                                                <Button
+                                                    Icon={MapPin}
+                                                    label="View Location"
+                                                    size="s"
+                                                    class="bg-blue-500"
+                                                    onclick={() => {
+                                                        alumniOccAddress = occupation.address;
+                                                        alumniOccMapOpen = true;
+                                                    }}
+                                                />
+                                            </div>
+                                        {/if}
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+                    </div>
                     <div class="flex flex-col space-y-2 border border-gray-200 rounded-lg p-6">
                         <h1 class="text-lg font-bold text-gray-500">Personal Information</h1>
                         <div class="flex flex-col w-full">
@@ -112,46 +163,6 @@
                         <div class="flex flex-col w-full">
                             <span class="text-sm text-gray-400">Student Number</span>
                             <span>{alumni.profile.student_number ? alumni.profile.student_number : "N/A"}</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col space-y-2 md:col-span-3 border border-gray-200 rounded-lg p-6">
-                        <h1 class="text-lg font-bold text-gray-500">Career</h1>
-                        <div class="flex flex-col w-full">
-                            <span class="text-sm text-gray-400">Employment Status</span>
-                            <span>{alumni.profile.employment_status}</span>
-                        </div>
-                        <div class="flex flex-col w-full">
-                            <span class="text-sm text-gray-400">Curriculum Vitae</span>
-                            <div class="flex items-center gap-x-2 text-blue-700">
-                                <File class="min-w-4 max-w-4"/>
-                                <a
-                                    href={API_BASE_URL + "/uploads/alumni/cv/" + alumni.profile.file_cv}
-                                    target="_blank"
-                                >View CV</a>
-                            </div>
-                        </div>
-                        <div class="flex flex-col w-full">
-                            <span class="text-sm text-gray-400">Occupations</span>
-                            {#each alumni.profile.occupations as occupation}
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-x-2">
-                                        <Briefcase class="min-w-4 max-w-4"/>
-                                        <span>{occupation.occupation} ({occupation.is_current ? "current" : "previous"})</span>
-                                    </div>
-                                    <div>
-                                        <Button
-                                            Icon={MapPin}
-                                            label="View Location"
-                                            size="s"
-                                            class="bg-blue-500"
-                                            onclick={() => {
-                                                alumniOccAddress = occupation.address;
-                                                alumniOccMapOpen = true;
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            {/each}
                         </div>
                     </div>
                 </div>

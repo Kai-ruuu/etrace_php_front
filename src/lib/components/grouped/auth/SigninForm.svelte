@@ -63,7 +63,7 @@
             placeholder="Password"
             bind:value={creds.password.value}
         />
-        <a href="/" class="text-red-700 text-sm md:text-md">Forgot Password?</a>
+        <a href="/forgot-password" class="text-red-700 text-sm md:text-md">Forgot Password?</a>
         <Button label="Sign in"/>
     </form>
 

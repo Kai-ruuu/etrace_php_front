@@ -193,17 +193,19 @@
     
     {#if published}
         <hr class="border-t border-gray-200">
-        <div class="w-full flex justify-end gap-x-4">
-            <button
-                onclick={() => {}}
-                class="flex items-center gap-x-2 border-r border-gray-300 pr-4 cursor-pointer"
-            >
-                <ThumbsUp class="min-w-4 max-w-4"/>
-                <span>{post.likes} {post.likes === 1 ? "Like" : "Likes"}</span>
-            </button>
-            <div class="flex items-center gap-x-2 border-r border-gray-300 pr-4">
-                <File class="min-w-4 max-w-4"/>
-                <span>{post.submissions} CV {post.submissions === 1 ? "Submission" : "Submissions"}</span>
+        <div class="w-full flex justify-end">
+            <div class="flex items-center gap-x-4">
+                <button
+                    onclick={() => {}}
+                    class="flex items-center gap-x-2 border-r border-gray-300 pr-4 cursor-pointer"
+                >
+                    <ThumbsUp class="min-w-4 max-w-4"/>
+                    <span>{post.likes} {post.likes === 1 ? "Like" : "Likes"}</span>
+                </button>
+                <div class="flex items-center gap-x-2 pr-4">
+                    <File class="min-w-4 max-w-4"/>
+                    <span>{post.submissions} CV {post.submissions === 1 ? "Submission" : "Submissions"}</span>
+                </div>
             </div>
             <Button
                 Icon={File}

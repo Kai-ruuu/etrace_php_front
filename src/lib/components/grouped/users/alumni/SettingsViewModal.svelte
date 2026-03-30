@@ -12,11 +12,7 @@
     } = $props();
 
     let updatePasswordOn = $state(false);
-	let password = $state({
-		oldPass: "",
-		newPass: "",
-		confirmedNewPass: "",
-	});
+	let password = $state({ oldPass: "", newPass: "", confirmedNewPass: "" });
 
     async function onChangePassword() {
 		await UserService.changePassword(

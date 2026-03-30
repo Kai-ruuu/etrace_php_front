@@ -1,4 +1,5 @@
 <script>
+	import { GeocodingService } from '$lib/app/services/geocoding';
 	import Button from '$lib/components/single/global/Button.svelte';
 	import { X } from 'lucide-svelte';
     import { onMount } from 'svelte';
@@ -9,27 +10,10 @@
     } = $props();
     
     let marker = $state(null);
-    
-    onMount(async () => {
+
+    async function geocodeAddress() {
         try {
-            const url = new URL('https://nominatim.openstreetmap.org/search');
-            url.searchParams.set('q', address);
-            url.searchParams.set('format', 'json');
-            url.searchParams.set('limit', '1');
-
-            const res = await fetch(url, {
-                headers: { 'User-Agent': 'CCT E-trace' },
-            });
-
-            const results = await res.json();
-
-            if (!results.length) {
-                error = 'Address not found. Try being more specific.';
-                return;
-            }
-
-            const { lat, lon, display_name } = results[0];
-            const [latitude, longitude] = [parseFloat(lat), parseFloat(lon)];
+            const [latitude, longitude, displayName] = await GeocodingService.geocode(address);
 
             marker?.remove();
             
@@ -40,14 +24,16 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([latitude, longitude])
                 .addTo(map)
-                .bindPopup(display_name)
+                .bindPopup(displayName)
                 .openPopup();
 
             map.flyTo([latitude, longitude], 15, { animate: true, duration: 1.2 });
         } catch (error) {
             console.error(error)
         }
-    });
+    }
+    
+    onMount(geocodeAddress);
 </script>
 <div class="absolute top-0 left-0 w-screen h-screen bg-white/75 overflow-x-hidden overflow-y-auto flex flex-col items-center justify-center p-8 z-100">
     <div class="border border-gray-200 rounded-lg bg-white flex flex-col items-stretch p-6 gap-y-4 md:w-2/3">

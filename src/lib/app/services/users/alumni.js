@@ -244,4 +244,82 @@ export class AlumniService {
             console.error(err);
         }
     }
+
+    static async updatePersonal(personalInfo, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/update-personal`), {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(personalInfo)
+            });
+            const data = await res.json();
+    
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async updateContact(contactInfo, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/update-contact`), {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(contactInfo)
+            });
+            const data = await res.json();
+    
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    
+    static async updateCareer(careerInfo, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/update-career`), {
+                method: "PATCH",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(careerInfo)
+            });
+            const data = await res.json();
+    
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async createAlumniSocial(social, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/social`), {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(social)
+            });
+            const data = await res.json();
+    
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    static async deleteAlumniSocial(id, onSuccess, onFail) {
+        try {
+            const res = await fetch(apiPath(`/api/users/alumni/${id}/social`), {
+                method: "DELETE",
+                credentials: "include",
+            });
+            const data = await res.json();
+    
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
 }

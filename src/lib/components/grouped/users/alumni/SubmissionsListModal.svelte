@@ -79,7 +79,7 @@
     onMount(getSubmissions);
 </script>
 
-<div class="absolute top-0 left-0 w-screen h-screen bg-white/75 overflow-x-hidden overflow-y-auto flex flex-col items-center p-8">
+<div class="absolute top-0 left-0 w-screen h-screen bg-white/75 overflow-x-hidden overflow-y-auto flex flex-col items-center p-8 z-100">
     <div class="border border-gray-200 rounded-lg bg-white gap-y-4 md:w-1/2 relative">
         <div class="flex items-center justify-between mb-4 sticky top-0 left-0 w-full p-6 pb-0">
             <h1 class="text-lg">CV Submissions</h1>

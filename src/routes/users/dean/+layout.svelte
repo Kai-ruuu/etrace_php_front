@@ -10,15 +10,22 @@
 	import { UserService } from '$lib/app/services/users/user';
 	import { useWidth } from '$lib/app/hooks/useWidth.svelte';
 	import { ROLE } from '$lib/app/core/constants';
+	import ConsentModal from '$lib/components/grouped/users/admins/ConsentModal.svelte';
+	import { AuthService } from '$lib/app/services/auth';
 
 	let { children } = $props();
 	let device = useWidth();
+	let openAgreement = $state(false);
 
-	onMount(async () => {
+	async function onReload() {
 		await UserService.me(
 			async (data, status) => {
 				if (data["role"] !== ROLE.dean.value) {
 					goto("/bad-request");
+				}
+				
+				if (!data.profile.agreed_to_consent) {
+					openAgreement = true;
 				}
 				
 				user.set(data);
@@ -29,7 +36,49 @@
 				}
 			}
 		);
-	});
+	}
+
+	async function onLogout() {
+        await AuthService.logout(
+            async (data, status) => {
+                goto("/");
+                await Toast.fire({
+                    title: data?.message ?? "Signed out successfully!",
+                    icon: "success"
+                });
+            },
+            async (data, status) => {
+                await Toast.fire({
+                    title: data?.message ?? "Failed to sign out.",
+                    icon: "error"
+                });
+                goto("/");
+            }
+        );
+    }
+
+	async function onAgree() {
+		await UserService.agreeToConsent(
+			async (data, status) => {
+				await onReload();
+
+				openAgreement = false;
+				
+				await Toast.fire({
+					title: data?.message ?? "Welcome to E-trace!",
+					icon: "success"
+				});
+			},
+			async (data, status) => {
+				await Toast.fire({
+					title: data?.message ?? "Unable to agree.",
+					icon: "success"
+				});
+			},
+		)
+	}
+
+	onMount(onReload);
 </script>
 
 <svelte:head>
@@ -37,18 +86,16 @@
 </svelte:head>
 
 {#if $user}
-	<BaseContainer class="flex items-stretch">
-		<Sidebar />
-		<div class="grow max-h-screen max-w-[calc(100%-1px)] overflow-auto">
-			{@render children()}
-		</div>
-		<!-- {#if device.isMobile}
-		{:else}
-			<div class="grow max-h-screen">
+	{#if openAgreement}
+		<ConsentModal forRole={"Dean"} {onAgree} onExit={onLogout}/>
+	{:else}
+		<BaseContainer class="flex items-stretch">
+			<Sidebar />
+			<div class="grow max-h-screen max-w-[calc(100%-1px)] overflow-auto">
 				{@render children()}
 			</div>
-		{/if} -->
-	</BaseContainer>
+		</BaseContainer>
+	{/if}
 {:else}
 	<p>Loading...</p>
 {/if}

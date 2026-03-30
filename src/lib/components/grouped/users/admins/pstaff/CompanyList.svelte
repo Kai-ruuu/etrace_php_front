@@ -1,9 +1,10 @@
 <script>
-	import { BadgeCheck, BookX, CircleMinus, CirclePlus, Minus, Plus, Power, PowerOff, RotateCw, Scale, Search, UserCheck, UserSearch, X } from "lucide-svelte";
+	import { BadgeCheck, BookX, CircleMinus, CirclePlus, Info, Minus, Plus, Power, PowerOff, RotateCw, Scale, Search, UserCheck, UserSearch, X } from "lucide-svelte";
 	import HeadBar from "../HeadBar.svelte";
 	import TextField from "$lib/components/single/global/TextField.svelte";
 	import ListPageController from "$lib/components/single/users/admin/ListPageController.svelte";
 	import Button from "$lib/components/single/global/Button.svelte";
+	import ApprovalStatusText from "$lib/components/single/users/company/ApprovalStatusText.svelte";
 
     let {
         query = $bindable(""),
@@ -31,14 +32,29 @@
         'Real Estate / Construction','Consulting / Professional Services','Nonprofit / NGO',
         'Telecommunications'
     ];
+
+    function getApprovedCount(company) {
+        const statuses = [
+            company.profile.stat_req_company_profile,
+            company.profile.stat_req_business_permit,
+            company.profile.stat_req_sec,
+            company.profile.stat_req_dti_cda,
+            company.profile.stat_req_reg_of_est,
+            company.profile.stat_req_philjobnet_reg,
+            company.profile.stat_req_cert_from_dole,
+            company.profile.stat_req_cert_no_case,
+            company.profile.stat_req_list_of_vacancies
+        ];
+        return statuses.filter((s) => s === "Approved").length;
+    }
 </script>
 
 <div class="flex flex-col items-stretch overflow-hidden h-full">
 	<HeadBar title="Verify Companies"/>
 	<div class="h-[calc(100%-64px)] overflow-auto">
         <div class="px-6 min-w-max">
-            <div class="border border-gray-200 rounded-lg bg-white space-y-2 overflow-clip my-6">
-                <div class="sticky top-0 left-0 px-6 bg-white pt-6 flex items-center gap-x-2">
+            <div class="border border-gray-200 rounded-lg bg-white space-y-2 my-6">
+                <div class="sticky top-0 left-0 px-6 bg-white pt-6 flex items-center gap-x-2 rounded-lg">
                     <select
                         bind:value={enabled}
                         onchange={onSearch}
@@ -83,14 +99,67 @@
                                 <tr>
                                     <th class="text-left py-2">Name</th>
                                     <th class="pl-4 text-left py-2">Email</th>
+                                    <th class="pl-4 text-left py-2">Approved Requirements</th>
+                                    <th class="pl-4 text-left py-2">Address</th>
                                     <th class="pl-4 text-left py-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {#each companiesInfo.data as company}
                                     <tr>
-                                        <td class="py-2 text-nowrap">{company.profile.name}</td>
-                                        <td class="pl-4 py-2 text-nowrap">{company.email}</td>
+                                        <td class="py-2 text-nowrap relative">
+                                            {company.profile.name}
+                                        </td>
+                                        <td class="pl-4 py-2 text-nowrap relative">
+                                            {company.email}
+                                        </td>
+                                        <td class="pl-4 py-2 text-nowrap">
+                                            <div class="relative hover:[&>div:nth-child(2)]:block cursor-pointer">
+                                                <div class="flex items-center gap-x-2">
+                                                    <Info class="min-w-4 max-w-4"/>
+                                                    <span>{getApprovedCount(company)}/9</span>
+                                                </div>
+                                                <div class="hidden border border-gray-300 text-sm absolute top-0 right-0 translate-x-[100%] translate-y-[-50%] z-100 bg-white p-4 rounded-lg space-y-2">
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>Company Profile</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_company_profile}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>Business Permit</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_business_permit}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>SEC</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_sec}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>DTI / CDA Reg.</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_dti_cda}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>Registry of Establishment</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_reg_of_est}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>Phil-JobNet Reg.</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_philjobnet_reg}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>Certification from DOLE</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_cert_from_dole}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>Certification of No Pending Case</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_cert_no_case}/>
+                                                    </div>
+                                                    <div class="w-full flex items-center justify-between gap-x-4">
+                                                        <p>List of Vacancies</p>
+                                                        <ApprovalStatusText status={company.profile.stat_req_list_of_vacancies}/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="pl-4 py-2 text-nowrap">{company.profile.address}</td>
                                         <td class="pl-4 flex items-center gap-x-2">
                                             <Button
                                                 title="View Profile"
