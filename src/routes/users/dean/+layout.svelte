@@ -12,6 +12,7 @@
 	import { ROLE } from '$lib/app/core/constants';
 	import ConsentModal from '$lib/components/grouped/users/admins/ConsentModal.svelte';
 	import { AuthService } from '$lib/app/services/auth';
+	import { Toast } from '$lib/app/utils/swal';
 
 	let { children } = $props();
 	let device = useWidth();

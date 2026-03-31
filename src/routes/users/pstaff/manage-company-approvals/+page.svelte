@@ -301,13 +301,6 @@
 	/>
 {/if}
 {#if confirmRejectPopupOpen}
-	<ConfirmPopup
-		confirmText={`Reject ${confirmRejectPopupCompany.profile.name}?`}
-		onConfirm={onConfirmReject}
-		onCancel={onCancelReject}
-	/>
-{/if}
-{#if confirmRejectPopupOpen}
 	<CompanyRejectModal
 		company={confirmRejectPopupCompany}
 		{onCancelReject}

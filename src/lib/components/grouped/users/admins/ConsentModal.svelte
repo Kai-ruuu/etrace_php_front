@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <div class="space-y-4 sticky bottom-0 bg-white pt-4 pb-6 border-t border-gray-300">
+        <div class="space-y-4 bg-white pt-4 pb-6 border-t border-gray-300">
             <label for="agree" class="flex items-center gap-x-2 cursor-pointer">
                 <input type="checkbox" id="agree" bind:checked={agreed}>
                 <span>I agree to the Data Access and Confidentiality Agreement</span>
