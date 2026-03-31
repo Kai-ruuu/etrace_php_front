@@ -244,8 +244,6 @@
 		);
 		await OccupationService.all(
 			async (data, stat) => {
-				console.log(data);
-				
 				if (!data) return;
 				
 				occupations = data;

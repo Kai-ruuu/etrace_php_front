@@ -44,7 +44,7 @@
 </script>
 
 {#if device.isMobile}
-    <div class={[$sidebarOpen ? "w-screen" : "hidden", "h-screen absolute top-0 left-0 bg-white z-100"]}>
+    <div class={[$sidebarOpen ? "w-screen" : "hidden", "h-screen absolute top-0 left-0 bg-gray-800 text-gray-300 z-100"]}>
         <div class={["min-h-16 flex items-center", !$sidebarOpen ? "justify-center py-4" : "px-6"]}>
             <div class={[!$sidebarOpen && "bg-gray-200 w-8 h-full flex items-center justify-center rounded"]}>
                 <h1 class="font-bold text-xl">{$sidebarOpen ? "E-trace" : "E"}</h1>
@@ -112,7 +112,7 @@
         </button>
     </div>
 {:else}
-    <div class={["bg-white max-h-full border-r border-r-gray-200 overflow-auto", $sidebarOpen ? "md:min-w-1/4" : "min-w-16"]}>
+    <div class={["max-h-full border-r border-r-gray-200 overflow-auto bg-gray-800 text-gray-300", $sidebarOpen ? "md:min-w-1/4" : "min-w-16"]}>
         <div class={["min-h-16 flex items-center", !$sidebarOpen ? "justify-center" : "px-6"]}>
             <div class={[!$sidebarOpen && "bg-gray-200 w-8 h-8 flex items-center justify-center rounded"]}>
                 <h1 class="font-bold text-xl">{$sidebarOpen ? "E-trace" : "E"}</h1>

@@ -116,6 +116,18 @@ export class AlumniService {
         }
     }
 
+    static async getFullPostById(id, onSuccess, onFail) {
+        try {
+            const url = apiPath(`/api/users/alumni/posts/${id}/full`);
+            const res = await fetch(url,  { credentials: "include" });
+            const data = await res.json();
+
+            await onCall(res, data, onSuccess, onFail);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     static async searchJobPosts(
         q = "",
         {

@@ -33,8 +33,6 @@
                     $user.profile["stat_" + key] = "Pending";
                 }
 
-                console.log($user.profile);
-
                 await Toast.fire({
                     title: data?.message ?? "Requirement revision has been uploaded.",
                     icon: "success"

@@ -44,7 +44,6 @@
 			industry,
 			onSuccess: async (data, status) => {
                 companiesInfo = data;
-				console.log(data);
             },
 			onFail: async (data, status) => {
 				await Toast.fire({

@@ -35,8 +35,6 @@
                     qualifications: []
                 };
 
-                console.log(data);
-                console.log(vacancies);
                 vacancies.push(data);
                 await Toast.fire({
                     title: "Vacancy has been added.",

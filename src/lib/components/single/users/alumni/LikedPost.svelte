@@ -4,10 +4,10 @@
 	import Button from "../../global/Button.svelte";
 	import { AlumniService } from "$lib/app/services/users/alumni";
 	import { onMount } from "svelte";
+	import JobPostModal from "$lib/components/grouped/users/alumni/JobPostModal.svelte";
 
     let { post, onDislike } = $props();
-
-    onMount(() => console.log(post))
+    let postModalOpen = $state(false);
 </script>
 
 <div class="border border-gray-200 rounded-lg p-6">
@@ -21,7 +21,7 @@
                 <div class="flex flex-col">
                     <h1 class="font-bold text-gray-600 text-sm">{post.company.name}</h1>
                     <button
-                        onclick={() => {}}
+                        onclick={() => postModalOpen = true}
                         class="flex items-center gap-x-2 text-blue-500 cursor-pointer"
                     >
                         <p class="text-lg">{post.job_post.position}</p>
@@ -43,3 +43,7 @@
         />
     </div>
 </div>
+
+{#if postModalOpen}
+    <JobPostModal jobPost={post} onExit={() => postModalOpen = false}/>
+{/if}

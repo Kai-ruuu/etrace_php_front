@@ -41,8 +41,6 @@
 	let userProfile = $derived($user.profile);
 
 	async function searchJobPosts() {
-		console.log($user);
-		
 		jobPostsReady = false;
 
 		await AlumniService.searchJobPosts(query, {
